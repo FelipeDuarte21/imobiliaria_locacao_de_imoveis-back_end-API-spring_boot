@@ -121,13 +121,15 @@ public class PessoaService {
 		
 		if(p.getTipoPessoa() == TipoPessoa.INQUILINO.getCod() ||
 			p.getTipoPessoa() == TipoPessoa.PROPRIETARIO_E_INQUILINO.getCod()){
-		
+			
 			if(p.getLocacoes().size() > 0) {
 				
 				p.getLocacoes().forEach(locacao -> {
 					locacaoService.delete(locacao);
 				});
 				
+			}else {
+				this.deleteInquilinoProprietario(p);
 			}
 			
 		}

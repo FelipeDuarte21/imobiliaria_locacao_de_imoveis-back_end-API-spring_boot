@@ -111,7 +111,8 @@ public class LocacaoService {
 		l.getImovel().setDisponivel(true);
 		imovelService.update(l.getImovel());
 		
-		if(this.findByInquilino(l.getInquilino().getIdPessoa()).size() == 1) {
+		if(this.findByInquilino(l.getInquilino().getIdPessoa()).size() == 1 || 
+			this.findByInquilino(l.getInquilino().getIdPessoa()) == null) {
 			pessoaService.deleteInquilinoProprietario(l.getInquilino());
 		}
 		
@@ -131,7 +132,6 @@ public class LocacaoService {
 	}
 	
 	public List<Locacao> findAll(){
-		
 		List<Locacao> locacoes = locacaoRepository.findAll();
 		
 		if(locacoes.isEmpty()) {
@@ -142,7 +142,6 @@ public class LocacaoService {
 	}
 	
 	public List<Locacao> findByInquilino(Integer id){
-		
 		List<Locacao> locacoes = locacaoRepository.findByInquilino(pessoaService.findById(id));
 		
 		if(locacoes.isEmpty()) {

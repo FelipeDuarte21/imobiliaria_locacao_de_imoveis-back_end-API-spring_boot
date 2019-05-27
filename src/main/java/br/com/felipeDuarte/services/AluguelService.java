@@ -1,5 +1,8 @@
 package br.com.felipeDuarte.services;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,23 +21,28 @@ public class AluguelService {
 	@Autowired
 	private LocacaoService locacaoService;
 	
-	
+
 	public List<Aluguel> saveAll(List<Aluguel> alugueis) {
 		return aluguelRepository.saveAll(alugueis);
 	}
-	
 	
 	public Aluguel recordPayment(Aluguel aluguel){
 		
 		Aluguel a = this.findById(aluguel.getIdAluguel());
 		
-		if(a.getQuite()) {
+		if(a == null) {
 			return null;
 		}
 		
-		aluguelRepository.save(aluguel);
+		if(a.getQuite()) {
+			return aluguel;
+		}else {
+			a.setQuite(true);
+		}
 		
-		return aluguel;
+		aluguelRepository.save(a);
+		
+		return a;
 	}
 	
 	public Aluguel findById(Integer id){
@@ -60,7 +68,28 @@ public class AluguelService {
 	}
 	
 	public List<Aluguel> findByPeriodo(String inicio,String fim){
-		return null;
+		
+		Calendar dataInicio = Calendar.getInstance();
+		Calendar dataFim = Calendar.getInstance();
+		
+		String[] datas = inicio.split("/");
+		dataInicio.set(Integer.parseInt(datas[2]),
+			Integer.parseInt(datas[1]) - 1,
+			Integer.parseInt(datas[0]));
+		
+		datas = fim.split("/");
+		dataFim.set(Integer.parseInt(datas[2]),
+				Integer.parseInt(datas[1]) - 1,
+				Integer.parseInt(datas[0]));
+		
+		List<Aluguel> alugueis = 
+		aluguelRepository.findByDataVencimentoBetweenOrderByDataVencimento(dataInicio.getTime(), dataFim.getTime());
+		
+		if(alugueis.isEmpty()) {
+			return null;
+		}
+		
+		return alugueis;
 	}
 	
 	public List<Aluguel> findAll(){
@@ -76,6 +105,35 @@ public class AluguelService {
 	
 	public void delete(Aluguel aluguel) {
 		aluguelRepository.delete(aluguel);
+	}
+	
+	public List<Aluguel> findAllAtrasados(){
+		Date hora = new Date();
+		long dataAtual = hora.getTime();
+		
+		
+		
+		List<Aluguel> alugueis = findAll();
+		
+		if(alugueis == null) {
+			return null;
+		}else {
+			
+			List<Aluguel> alugueisAtrasados = new ArrayList<>();
+		
+			alugueis.forEach(aluguel -> {
+				if(aluguel.getDataVencimento().getTime() < dataAtual) {
+					alugueisAtrasados.add(aluguel);
+				}
+			});
+			
+			if(alugueisAtrasados.isEmpty()) {
+				return null;
+			}
+			
+			return alugueisAtrasados;
+		}
+		
 	}
 	
 }

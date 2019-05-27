@@ -59,7 +59,7 @@ public class ImovelResource {
 		
 		imovelService.delete(imovel);
 		
-		return ResponseEntity.status(HttpStatus.OK).body("");
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
 		
 	}
 	

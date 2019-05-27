@@ -58,7 +58,7 @@ public class LocacaoResource {
 		
 		locacaoService.delete(locacao);
 		
-		return ResponseEntity.status(HttpStatus.OK).body("");
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
 		
 	}
 	

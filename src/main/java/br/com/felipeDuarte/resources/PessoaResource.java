@@ -69,7 +69,7 @@ public class PessoaResource {
 		
 		pessoaService.delete(pessoa);
 		
-		return ResponseEntity.status(HttpStatus.OK).body("");
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
 	}
 	
 	@GetMapping("/pessoa/{id}")

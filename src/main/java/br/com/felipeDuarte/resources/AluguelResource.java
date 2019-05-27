@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.felipeDuarte.domain.Aluguel;
@@ -62,9 +63,16 @@ public class AluguelResource {
 		return alugueis;
 	}
 	
-	@GetMapping("/aluguel/periodo/{inicio}/{fim}")
-	private List<Aluguel> findByPeriodo(@PathVariable("{inicio}") String inicio,@PathVariable("{fim}") String fim){
-		return null;
+	@GetMapping("/aluguel/periodo")
+	private List<Aluguel> findByPeriodo(@RequestParam(name="inicio") String inicio,@RequestParam(name="fim") String fim){
+		
+		List<Aluguel> alugueis = aluguelService.findByPeriodo(inicio, fim);
+		
+		if(alugueis.isEmpty()) {
+			throw new ObjectNotFoundException("Nenhum aluguel encontrado para o período informado!");
+		}
+		
+		return alugueis;
 	}
 	
 	@GetMapping("/aluguel")
@@ -74,6 +82,18 @@ public class AluguelResource {
 		
 		if(alugueis == null) {
 			throw new ObjectNotFoundException("Nenhum aluguel cadastrado!");
+		}
+		
+		return alugueis;
+	}
+	
+	@GetMapping("/aluguel/atrasados")
+	private List<Aluguel> findAllAtrasados(){
+		
+		List<Aluguel> alugueis = aluguelService.findAllAtrasados();
+		
+		if(alugueis == null) {
+			throw new ObjectNotFoundException("Nenhum aluguel atrasado!");
 		}
 		
 		return alugueis;
