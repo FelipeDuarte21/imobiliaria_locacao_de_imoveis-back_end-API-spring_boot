@@ -207,4 +207,28 @@ public class PessoaService {
 		return inquilinos;
 	}
 
+	public List<Pessoa> findContainingNomeInquilino(String nome){
+		List<Pessoa>  inquilinos = 
+				pessoaRepository.findByNomeContainingAndTipoPessoaAndAtivo(
+						nome, TipoPessoa.INQUILINO.getCod(),true);
+		
+		if(inquilinos.isEmpty()) {
+			return null;
+		}
+		
+		return inquilinos;
+	}
+	
+	public List<Pessoa> findContainingNomeProprietario(String nome){
+		List<Pessoa>  proprietarios = 
+				pessoaRepository.findByNomeContainingAndTipoPessoaAndAtivo(
+						nome, TipoPessoa.PROPRIETARIO.getCod(),true);
+		
+		if(proprietarios.isEmpty()) {
+			return null;
+		}
+		
+		return proprietarios;
+	}
+	
 }

@@ -13,5 +13,6 @@ public interface PessoaRepository extends JpaRepository<Pessoa,Integer>{
 
 	public Optional<Pessoa> findByCpf(String cpf);
 	public List<Pessoa> findByTipoPessoaAndAtivo(int tipoPessoa,boolean ativo);
+	public List<Pessoa> findByNomeContainingAndTipoPessoaAndAtivo(String nome,Integer tipo,boolean ativo);
 	
 }

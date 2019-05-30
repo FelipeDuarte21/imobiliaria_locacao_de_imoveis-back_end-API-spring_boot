@@ -96,6 +96,17 @@ public class PessoaResource {
 		return proprietarios;
 	}
 	
+	@GetMapping("/proprietarios/{nome}")
+	private List<Pessoa> findByNomeProprietario(@PathVariable String nome){
+		List<Pessoa> proprietarios = pessoaService.findContainingNomeProprietario(nome);
+		
+		if(proprietarios == null) {
+			throw new ObjectNotFoundException("Nenhum Proprietário Encontrado Para o Nome Informado!");
+		}
+		
+		return proprietarios;
+	}
+	
 	@GetMapping("/inquilinos")
 	private List<Pessoa> findAllInquilinos(){
 		
@@ -103,6 +114,17 @@ public class PessoaResource {
 		
 		if(inquilinos == null) {
 			throw new ObjectNotFoundException("Não há inquilinos cadastrados!");
+		}
+		
+		return inquilinos;
+	}
+	
+	@GetMapping("/inquilinos/{nome}")
+	private List<Pessoa> findByNomeInquilino(@PathVariable String nome){
+		List<Pessoa> inquilinos = pessoaService.findContainingNomeInquilino(nome);
+		
+		if(inquilinos == null) {
+			throw new ObjectNotFoundException("Nenhum Inquilino Encontrado Para o Nome Informado!");
 		}
 		
 		return inquilinos;

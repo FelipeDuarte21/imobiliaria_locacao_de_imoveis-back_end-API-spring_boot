@@ -33,7 +33,7 @@ public class AluguelResource {
 		Aluguel a = aluguelService.recordPayment(aluguel);
 		
 		if(a == null) {
-			throw new ObjectBadRequestException("O aluguel já foi pago!");
+			throw new ObjectBadRequestException("Erro ao Registrar Pagamento!");
 		}
 		
 		return ResponseEntity.status(HttpStatus.OK).body(a);

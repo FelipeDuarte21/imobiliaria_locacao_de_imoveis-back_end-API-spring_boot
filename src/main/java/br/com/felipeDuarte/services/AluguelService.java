@@ -28,21 +28,21 @@ public class AluguelService {
 	
 	public Aluguel recordPayment(Aluguel aluguel){
 		
-		Aluguel a = this.findById(aluguel.getIdAluguel());
+		try {
 		
-		if(a == null) {
+			aluguel.setQuite(true);
+			
+			Calendar data = Calendar.getInstance();
+			aluguel.setDataPagamento(data.getTime());
+			
+			aluguelRepository.save(aluguel);
+			
+			return aluguel;
+			
+		}catch(RuntimeException ex) {
 			return null;
 		}
 		
-		if(a.getQuite()) {
-			return aluguel;
-		}else {
-			a.setQuite(true);
-		}
-		
-		aluguelRepository.save(a);
-		
-		return a;
 	}
 	
 	public Aluguel findById(Integer id){
