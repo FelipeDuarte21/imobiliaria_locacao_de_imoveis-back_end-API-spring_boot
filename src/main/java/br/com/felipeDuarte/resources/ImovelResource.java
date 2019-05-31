@@ -100,9 +100,16 @@ public class ImovelResource {
 		return imoveis;
 	}
 	
-	@GetMapping("/imovel/disponivel/{valor}")
-	private List<Imovel> findByDisponivel(@PathVariable Double valor){
-		return null;
+	@GetMapping("/imovel/disponivel/{preco}")
+	private List<Imovel> findByDisponivel(@PathVariable Double preco){
+		
+		List<Imovel> imoveis = imovelService.findByDisponivel(preco);
+		
+		if(imoveis == null) {
+			throw new ObjectNotFoundException("Não há nenhum imóvel para o valor informado!");
+		}
+		
+		return imoveis;
 	}
 	
 	@GetMapping("/imovel/proprietario/{id}")

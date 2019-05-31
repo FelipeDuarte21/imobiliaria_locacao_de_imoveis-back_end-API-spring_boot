@@ -14,6 +14,7 @@ public interface ImovelRepository extends JpaRepository<Imovel,Integer>{
 	
 	public List<Imovel> findByDisponivel(boolean value);
 	public List<Imovel> findByProprietario(Pessoa proprietario);
+	public List<Imovel> findByPrecoLessThanEqualAndDisponivel(Double preco,Boolean valor);
 	public Imovel findByEndereco(Endereco endereco);
 	
 }

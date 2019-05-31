@@ -95,8 +95,15 @@ public class ImovelService {
 		return imoveis;
 	}
 	
-	public List<Imovel> findByDisponivel(Double valor){
-		return null;
+	public List<Imovel> findByDisponivel(Double preco){
+		
+		List<Imovel> imoveis = imovelRepository.findByPrecoLessThanEqualAndDisponivel(preco,true);
+		
+		if(imoveis.isEmpty()) {
+			return null;
+		}
+		
+		return imoveis;
 	}
 	
 	public List<Imovel> findByProprietario(Integer id){
