@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.com.felipeDuarte</groupId>
 	<artifactId>imobiliaria-api</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>imobiliaria-api</name>
 	<description>API de locação de imóveis de uma imobiliária</description>

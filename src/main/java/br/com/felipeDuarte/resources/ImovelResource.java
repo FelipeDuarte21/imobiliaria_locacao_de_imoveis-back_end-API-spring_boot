@@ -123,5 +123,17 @@ public class ImovelResource {
 		
 		return imoveis;
 	}
+	
+	@GetMapping("/imovel/proprietario/nome/{nome}")
+	private List<Imovel> findByNome(@PathVariable String nome){
+		
+		List<Imovel> imoveis = imovelService.findByNomeProprietario(nome);
+		
+		if(imoveis == null) {
+			throw new ObjectNotFoundException("Não há nenhum imóvel para este proprietário!");
+		}
+		
+		return imoveis;
+	}
 
 }

@@ -117,4 +117,15 @@ public class ImovelService {
 		return imoveis;
 	}
 	
+	public List<Imovel> findByNomeProprietario(String nome){
+		
+		List<Imovel> imoveis = imovelRepository.findByNomeProprietario(nome);
+		
+		if(imoveis.isEmpty()) {
+			return null;
+		}
+		
+		return imoveis;
+	}
+	
 }
