@@ -119,7 +119,13 @@ public class ImovelService {
 	
 	public List<Imovel> findByNomeProprietario(String nome){
 		
-		List<Imovel> imoveis = imovelRepository.findByNomeProprietario(nome);
+		List<Imovel> imoveis;
+		
+		if(nome.isEmpty() || nome == null) {
+			imoveis = imovelRepository.findAll();
+		}else {
+			imoveis = imovelRepository.findByNomeProprietario(nome);
+		}
 		
 		if(imoveis.isEmpty()) {
 			return null;

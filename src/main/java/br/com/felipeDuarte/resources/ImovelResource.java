@@ -112,7 +112,7 @@ public class ImovelResource {
 		return imoveis;
 	}
 	
-	@GetMapping("/imovel/proprietario/{id}")
+	@GetMapping("/imovel/proprietario/id/{id}")
 	private List<Imovel> findByProprietario(@PathVariable Integer id){
 		
 		List<Imovel> imoveis = imovelService.findByProprietario(id);
