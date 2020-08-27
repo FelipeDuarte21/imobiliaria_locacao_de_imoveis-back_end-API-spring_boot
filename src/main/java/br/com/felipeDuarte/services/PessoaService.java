@@ -1,9 +1,11 @@
 package br.com.felipeDuarte.services;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.felipeDuarte.domain.Pessoa;
@@ -41,13 +43,13 @@ public class PessoaService {
 		 return p.get();
 	}
 	
-	private Pessoa logicaSaveUpdate(Pessoa pessoa,boolean opcao) {
+	private Pessoa logicaSaveUpdate(Pessoa pessoa,boolean ativa) {
 		
 		Optional<Pessoa> p = pessoaRepository.findByCpf(pessoa.getCpf());
 		
 		if(p.isPresent()) {
 			
-			if(opcao) {
+			if(ativa) {
 				if(p.get().getAtivo()) {
 					
 					if(pessoa.getTipoPessoa().equals(p.get().getTipoPessoa())) { 
@@ -103,9 +105,11 @@ public class PessoaService {
 		return this.logicaSaveUpdate(pessoa, false);
 	}
 	
-	public void delete(Pessoa pessoa){
+	public boolean delete(Integer id){
 		
-		Pessoa p = this.findById(pessoa.getIdPessoa());
+		Pessoa p = this.findById(id);
+		
+		if(p == null) return false;
 		
 		if(p.getTipoPessoa() == TipoPessoa.PROPRIETARIO.getCod() || 
 			p.getTipoPessoa() == TipoPessoa.PROPRIETARIO_E_INQUILINO.getCod()) {
@@ -116,7 +120,7 @@ public class PessoaService {
 				});
 			}
 			
-			this.deleteInquilinoProprietario(pessoa);
+			this.deleteInquilinoProprietario(p);
 		}
 		
 		if(p.getTipoPessoa() == TipoPessoa.INQUILINO.getCod() ||
@@ -134,6 +138,7 @@ public class PessoaService {
 			
 		}
 		
+		return true;
 	}
 	
 	public void deleteInquilinoProprietario(Pessoa pessoa) {
@@ -150,85 +155,59 @@ public class PessoaService {
 		}
 		
 		return pessoa.get();
-		
 	}
 	
-	public List<Pessoa> findByLetra(String letra) {
-		return null;
+	private Page<Pessoa> findAll(Integer tipo,Integer tipo2,Integer page,Integer size){
+		
+		PageRequest pg = PageRequest.of(page, size,Direction.ASC,"nome");
+		
+		Page<Pessoa> pageResp = 
+			this.pessoaRepository.findByAtivoAndTipoPessoaOrTipoPessoa(true,tipo, tipo2,pg);
+		
+		return pageResp;	
 	}
 
-	public List<Pessoa> findAllProprietarios(){
-		List<Pessoa> proprietarios;
-		List<Pessoa> proprietariosInquilinos;
-		
-		try {
-			proprietarios = 
-					pessoaRepository.findByTipoPessoaAndAtivo(TipoPessoa.PROPRIETARIO.getCod(),true);
-		
-			proprietariosInquilinos = 
-					pessoaRepository.findByTipoPessoaAndAtivo(TipoPessoa.PROPRIETARIO_E_INQUILINO.getCod(),true);
-			
-			
-		}catch(RuntimeException ex) {
-			return null;
-		}
-		
-		if(proprietarios.isEmpty() && proprietariosInquilinos.isEmpty()) {
-			return null;
-		}else {
-			proprietarios.addAll(proprietariosInquilinos);
-		}
-		
-		return proprietarios;
-	}
-
-	public List<Pessoa> findAllInquilinos(){
-		
-		List<Pessoa> inquilinos;
-		List<Pessoa> inquilinosProprietarios;
-		
-		try {
-			inquilinos = 
-					pessoaRepository.findByTipoPessoaAndAtivo(TipoPessoa.INQUILINO.getCod(),true);
-			
-			inquilinosProprietarios = 
-					pessoaRepository.findByTipoPessoaAndAtivo(TipoPessoa.PROPRIETARIO_E_INQUILINO.getCod(), true);
-			
-		}catch(RuntimeException ex) {
-			return null;
-		}
-		
-		if(inquilinos.isEmpty() && inquilinosProprietarios.isEmpty()) {
-			return null;
-		}else {
-			inquilinos.addAll(inquilinosProprietarios);
-		}
-		
-		return inquilinos;
-	}
-
-	public List<Pessoa> findContainingNomeInquilino(String nome){
-		List<Pessoa>  inquilinos = 
-				pessoaRepository.findByNomeContainingAndTipoPessoaAndAtivo(
-						nome, TipoPessoa.INQUILINO.getCod(),true);
-		
-		if(inquilinos.isEmpty()) {
-			return null;
-		}
-		
-		return inquilinos;
+	public Page<Pessoa> findAllProprietarios(Integer page,Integer size){
+		return this.findAll(
+				TipoPessoa.PROPRIETARIO.getCod(), TipoPessoa.PROPRIETARIO_E_INQUILINO.getCod(),
+					page,size);
 	}
 	
-	public List<Pessoa> findContainingNomeProprietario(String nome){
-		List<Pessoa>  proprietarios = 
-				pessoaRepository.findByNomeContainingAndTipoPessoaAndAtivo(
-						nome, TipoPessoa.PROPRIETARIO.getCod(),true);
+	public Page<Pessoa> findAllInquilinos(Integer page,Integer size){
+		return this.findAll(
+				TipoPessoa.INQUILINO.getCod(), TipoPessoa.PROPRIETARIO_E_INQUILINO.getCod(), 
+					page, size);
+	}
+	
+	private Page<Pessoa> findContainingNome(String nome,Integer tipo,Integer tipo2,
+			Integer page,Integer size){
 		
-		if(proprietarios.isEmpty()) {
-			return null;
+		PageRequest pg = PageRequest.of(page, size,Direction.ASC, "nome");
+		
+		Page<Pessoa>  pageResp;
+		
+		if(!nome.isEmpty()) {
+		
+			pageResp = this.pessoaRepository.findByAtivoAndNomeContainingAndTipoPessoaOrTipoPessoa(
+					true,nome,tipo,tipo2,pg);
+		
+		}else {
+			pageResp = this.findAll(tipo, tipo2, page, size);	
 		}
 		
-		return proprietarios;
+		return pageResp;
+	}
+
+	public Page<Pessoa> findContainingNomeInquilino(String nome,Integer page,Integer size){	
+		return this.findContainingNome(nome, 
+				TipoPessoa.INQUILINO.getCod(), TipoPessoa.PROPRIETARIO_E_INQUILINO.getCod(), 
+					page, size);
+	}
+	
+	public Page<Pessoa> findContainingNomeProprietario(String nome,Integer page,Integer size){
+		return this.findContainingNome(nome,
+				TipoPessoa.PROPRIETARIO.getCod(), TipoPessoa.PROPRIETARIO_E_INQUILINO.getCod(), 
+					page, size);
 	}
 	
 }

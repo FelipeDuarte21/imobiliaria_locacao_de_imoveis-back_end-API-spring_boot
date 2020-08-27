@@ -1,10 +1,9 @@
 package br.com.felipeDuarte.resources;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.felipeDuarte.domain.Pessoa;
@@ -21,15 +22,16 @@ import br.com.felipeDuarte.resources.exception.ObjectBadRequestException;
 import br.com.felipeDuarte.resources.exception.ObjectNotFoundException;
 import br.com.felipeDuarte.services.PessoaService;
 
-@CrossOrigin("http://localhost")
+@CrossOrigin
 @RestController
+@RequestMapping("/pessoa")
 public class PessoaResource {
 	
 	@Autowired
 	private PessoaService pessoaService;
 	
-	@GetMapping("/pessoa/cpf/{cpf}")
-	private ResponseEntity<?> findByCpf(@PathVariable String cpf){
+	@GetMapping("/cpf")
+	private ResponseEntity<Pessoa> findByCpf(@RequestParam(name = "value") String cpf){
 		Pessoa p = pessoaService.findByCpf(cpf);
 		
 		if(p == null) {
@@ -39,7 +41,7 @@ public class PessoaResource {
 		}
 	}
 	
-	@PostMapping("/pessoa")
+	@PostMapping
 	private ResponseEntity<?> save(@Valid @RequestBody Pessoa pessoa) {
 		
 		Pessoa p  = pessoaService.save(pessoa);
@@ -51,7 +53,7 @@ public class PessoaResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(p);
 	}
 	
-	@PutMapping("/pessoa")
+	@PutMapping
 	private ResponseEntity<?> update(@Valid @RequestBody Pessoa pessoa) {
 		
 		Pessoa p = pessoaService.update(pessoa);
@@ -64,16 +66,20 @@ public class PessoaResource {
 		
 	}
 	
-	@DeleteMapping("/pessoa")
-	private ResponseEntity<?> delete(@Valid @RequestBody Pessoa pessoa) {
+	@DeleteMapping("/{id}")
+	private ResponseEntity<?> delete(@PathVariable Integer id) {
 		
-		pessoaService.delete(pessoa);
+		boolean ok = pessoaService.delete(id);
 		
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
+		if(ok) {
+			return ResponseEntity.status(HttpStatus.OK).build();
+		}else {
+			throw new ObjectBadRequestException("Id Inválido!");
+		}
 	}
 	
-	@GetMapping("/pessoa/{id}")
-	private ResponseEntity<?> buscarPessoaId(@PathVariable Integer id) {
+	@GetMapping("/{id}")
+	private ResponseEntity<Pessoa> buscarPessoaId(@PathVariable Integer id) {
 		
 		Pessoa p = pessoaService.findById(id);
 		
@@ -85,49 +91,45 @@ public class PessoaResource {
 	}
 	
 	@GetMapping("/proprietarios")
-	private List<Pessoa> findAllProprietarios(){
+	private ResponseEntity<Page<Pessoa>> findAllProprietarios(
+			@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = "6") Integer size){
 		
-		List<Pessoa> proprietarios = pessoaService.findAllProprietarios();
+		Page<Pessoa> pageProps = pessoaService.findAllProprietarios(page,size);
 		
-		if(proprietarios == null) {
-			throw new ObjectNotFoundException("Não há proprietários cadastrados!");
-		}
-		
-		return proprietarios;
+		return ResponseEntity.status(HttpStatus.OK).body(pageProps);
 	}
 	
-	@GetMapping("/proprietarios/{nome}")
-	private List<Pessoa> findByNomeProprietario(@PathVariable String nome){
-		List<Pessoa> proprietarios = pessoaService.findContainingNomeProprietario(nome);
+	@GetMapping("/proprietarios/search")
+	private ResponseEntity<Page<Pessoa>> findByNomeProprietario(@RequestParam(defaultValue = "") String nome,
+			@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = "6") Integer size){
 		
-		if(proprietarios == null) {
-			throw new ObjectNotFoundException("Nenhum Proprietário Encontrado Para o Nome Informado!");
-		}
+		Page<Pessoa> pageProps = pessoaService.findContainingNomeProprietario(nome,page,size);
 		
-		return proprietarios;
+		return ResponseEntity.status(HttpStatus.OK).body(pageProps);
 	}
+	
 	
 	@GetMapping("/inquilinos")
-	private List<Pessoa> findAllInquilinos(){
+	private ResponseEntity<Page<Pessoa>> findAllInquilinos(
+			@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = "6") Integer size){
 		
-		List<Pessoa> inquilinos  = pessoaService.findAllInquilinos();
+		Page<Pessoa> pageInq  = pessoaService.findAllInquilinos(page,size);
 		
-		if(inquilinos == null) {
-			throw new ObjectNotFoundException("Não há inquilinos cadastrados!");
-		}
-		
-		return inquilinos;
+		return ResponseEntity.status(HttpStatus.OK).body(pageInq);
 	}
 	
-	@GetMapping("/inquilinos/{nome}")
-	private List<Pessoa> findByNomeInquilino(@PathVariable String nome){
-		List<Pessoa> inquilinos = pessoaService.findContainingNomeInquilino(nome);
+	@GetMapping("/inquilinos/search")
+	private ResponseEntity<Page<Pessoa>> findByNomeInquilino(@RequestParam(defaultValue = "") String nome,
+			@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = "6") Integer size){
 		
-		if(inquilinos == null) {
-			throw new ObjectNotFoundException("Nenhum Inquilino Encontrado Para o Nome Informado!");
-		}
+		Page<Pessoa> pageInq = pessoaService.findContainingNomeInquilino(nome,page,size);
 		
-		return inquilinos;
+		
+		return ResponseEntity.status(HttpStatus.OK).body(pageInq);
 	}
 	
 	
