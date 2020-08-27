@@ -64,8 +64,8 @@ public class Contato implements Serializable{
 		this.idContato = idContato;
 	}
 
-	public Integer getTipoContato() {
-		return this.tipoContato;
+	public String getTipoContato() {
+		return TipoContato.toEnum(this.tipoContato).getDescricao();
 	}
 
 	public void setTipoContato(Integer tipoContato) {

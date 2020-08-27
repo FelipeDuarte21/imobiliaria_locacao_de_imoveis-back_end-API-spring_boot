@@ -111,8 +111,8 @@ public class PessoaService {
 		
 		if(p == null) return false;
 		
-		if(p.getTipoPessoa() == TipoPessoa.PROPRIETARIO.getCod() || 
-			p.getTipoPessoa() == TipoPessoa.PROPRIETARIO_E_INQUILINO.getCod()) {
+		if(p.getTipoPessoa().equals(TipoPessoa.PROPRIETARIO.getDescricao()) || 
+			p.getTipoPessoa().equals(TipoPessoa.PROPRIETARIO_E_INQUILINO.getDescricao())) {
 			
 			if(p.getImoveis().size() > 0) {
 				p.getImoveis().forEach(imovel -> {
@@ -123,8 +123,8 @@ public class PessoaService {
 			this.deleteInquilinoProprietario(p);
 		}
 		
-		if(p.getTipoPessoa() == TipoPessoa.INQUILINO.getCod() ||
-			p.getTipoPessoa() == TipoPessoa.PROPRIETARIO_E_INQUILINO.getCod()){
+		if(p.getTipoPessoa().equals(TipoPessoa.INQUILINO.getDescricao()) ||
+			p.getTipoPessoa().equals(TipoPessoa.PROPRIETARIO_E_INQUILINO.getDescricao())){
 			
 			if(p.getLocacoes().size() > 0) {
 				

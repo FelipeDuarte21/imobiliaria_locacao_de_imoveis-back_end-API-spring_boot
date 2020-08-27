@@ -57,7 +57,7 @@ public class Pessoa implements Serializable{
 	private Integer estadoCivil;
 	
 	@NotNull(message = "Informe a data de nascimento")
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	private Date dataNascimento;
 	
@@ -72,7 +72,7 @@ public class Pessoa implements Serializable{
 	private String orgaoEmissor;
 	
 	@NotNull(message = "Informe uma data de expedição")
-	@JsonFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(pattern="dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	private Date dataExpedicao;
 	
@@ -140,8 +140,8 @@ public class Pessoa implements Serializable{
 		this.idPessoa = idPessoa;
 	}
 
-	public Integer getTipoPessoa() {
-		return tipoPessoa;
+	public String getTipoPessoa() {
+		return TipoPessoa.toEnum(this.tipoPessoa).getDescricao();
 	}
 
 	public void setTipoPessoa(Integer tipoPessoa) {
@@ -164,8 +164,8 @@ public class Pessoa implements Serializable{
 		this.nacionalidade = nacionalidade;
 	}
 
-	public Integer getEstadoCivil() {
-		return this.estadoCivil;
+	public String getEstadoCivil() {
+		return TipoEstadoCivil.toEnum(this.estadoCivil).getDescricao();
 	}
 
 	public void setEstadoCivil(Integer estadoCivil) {
