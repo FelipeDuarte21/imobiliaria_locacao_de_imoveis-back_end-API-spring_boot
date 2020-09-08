@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.felipeDuarte.domain.Imovel;
@@ -21,16 +24,17 @@ import br.com.felipeDuarte.resources.exception.ObjectBadRequestException;
 import br.com.felipeDuarte.resources.exception.ObjectNotFoundException;
 import br.com.felipeDuarte.services.ImovelService;
 
-@CrossOrigin("http://localhost")
+@CrossOrigin
 @RestController
+@RequestMapping("/imovel")
 public class ImovelResource {
 	
 	@Autowired
 	private ImovelService imovelService;
 	
 	
-	@PostMapping("/imovel")
-	private ResponseEntity<?> save(@Valid @RequestBody Imovel imovel){
+	@PostMapping
+	private ResponseEntity<Imovel> save(@Valid @RequestBody Imovel imovel){
 		
 		Imovel i = imovelService.save(imovel);
 		
@@ -42,8 +46,8 @@ public class ImovelResource {
 		
 	}
 	
-	@PutMapping("/imovel")
-	private ResponseEntity<?> update(@Valid @RequestBody Imovel imovel){
+	@PutMapping
+	private ResponseEntity<Imovel> update(@Valid @RequestBody Imovel imovel){
 		
 		Imovel i = imovelService.update(imovel);
 		
@@ -54,17 +58,20 @@ public class ImovelResource {
 		return ResponseEntity.status(HttpStatus.OK).body(i);
 	}
 	
-	@DeleteMapping("/imovel")
-	private ResponseEntity<?> delete(@Valid @RequestBody Imovel imovel){
+	@DeleteMapping("/{id}")
+	private ResponseEntity<?> delete(@PathVariable Integer id){
 		
-		imovelService.delete(imovel);
+		boolean confirma = imovelService.delete(id);
 		
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
+		if(confirma) {
+			return ResponseEntity.status(HttpStatus.OK).build();
+		}
 		
+		throw new ObjectBadRequestException("Id informado é Inválido!");
 	}
 	
-	@GetMapping("/imovel/{id}")
-	private ResponseEntity<?> findById(@PathVariable Integer id){
+	@GetMapping("/{id}")
+	private ResponseEntity<Imovel> findById(@PathVariable Integer id){
 		
 		Imovel imovel = imovelService.findById(id);
 		
@@ -76,44 +83,39 @@ public class ImovelResource {
 		
 	}
 	
-	@GetMapping("/imovel")
-	private List<Imovel> findAll(){
+	@GetMapping
+	private ResponseEntity<Page<Imovel>> findAll(
+			@RequestParam(defaultValue = "0") Integer page, 
+			@RequestParam(defaultValue = "6") Integer size){
 		
-		List<Imovel> imoveis = imovelService.findAll();
+		Page<Imovel> imoveis = imovelService.findAll(page,size);
 		
-		if(imoveis == null) {
-			throw new ObjectNotFoundException("Não há imóveis cadastrados!");
-		}
-		
-		return imoveis;
+		return ResponseEntity.status(HttpStatus.OK).body(imoveis);
 	}
 	
-	@GetMapping("/imovel/disponivel")
-	private List<Imovel> findByDisponivel(){
+	@GetMapping("/disponivel")
+	private ResponseEntity<Page<Imovel>> findByDisponivel(
+			@RequestParam(defaultValue = "0") Integer page, 
+			@RequestParam(defaultValue = "6") Integer size){
 		
-		List<Imovel> imoveis = imovelService.findByDisponivel();
+		Page<Imovel> imoveis = imovelService.findByDisponivel(page,size);
 		
-		if(imoveis == null) {
-			throw new ObjectNotFoundException("Não há imóveis disponíveis para locação!");
-		}
-		
-		return imoveis;
+		return ResponseEntity.status(HttpStatus.OK).body(imoveis);
 	}
 	
-	@GetMapping("/imovel/disponivel/{preco}")
-	private List<Imovel> findByDisponivel(@PathVariable Double preco){
+	@GetMapping("/disponivel/search")
+	private ResponseEntity<Page<Imovel>> findByDisponivel(
+			@RequestParam(defaultValue = "500") Double preco,
+			@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = "6") Integer size){
 		
-		List<Imovel> imoveis = imovelService.findByDisponivel(preco);
+		Page<Imovel> imoveis = imovelService.findByDisponivel(preco,page,size);
 		
-		if(imoveis == null) {
-			throw new ObjectNotFoundException("Não há nenhum imóvel para o valor informado!");
-		}
-		
-		return imoveis;
+		return ResponseEntity.status(HttpStatus.OK).body(imoveis);
 	}
 	
-	@GetMapping("/imovel/proprietario/id/{id}")
-	private List<Imovel> findByProprietario(@PathVariable Integer id){
+	@GetMapping("/proprietario/{id}")
+	private ResponseEntity<List<Imovel>> findByProprietario(@PathVariable Integer id){
 		
 		List<Imovel> imoveis = imovelService.findByProprietario(id);
 		
@@ -121,11 +123,11 @@ public class ImovelResource {
 			throw new ObjectNotFoundException("Não há nenhum imóvel para este proprietário!");
 		}
 		
-		return imoveis;
+		return ResponseEntity.status(HttpStatus.OK).body(imoveis);
 	}
 	
-	@GetMapping("/imovel/proprietario/nome/{nome}")
-	private List<Imovel> findByNome(@PathVariable String nome){
+	@GetMapping("/proprietario/search")
+	private ResponseEntity<List<Imovel>> findByNome(@RequestParam(defaultValue = "") String nome){
 		
 		List<Imovel> imoveis = imovelService.findByNomeProprietario(nome);
 		
@@ -133,7 +135,7 @@ public class ImovelResource {
 			throw new ObjectNotFoundException("Não há nenhum imóvel para este proprietário!");
 		}
 		
-		return imoveis;
+		return ResponseEntity.status(HttpStatus.OK).body(imoveis);
 	}
 
 }

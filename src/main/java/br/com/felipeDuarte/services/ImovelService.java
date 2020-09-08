@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.felipeDuarte.domain.Imovel;
@@ -47,13 +50,22 @@ public class ImovelService {
 		return imovel;
 	}
 	
-	public void delete(Imovel imovel) {
+	public boolean delete(Integer id) {
 		
-		if(!imovel.getDisponivel()) {
-			locacaoService.delete(locacaoService.findByImovel(imovel));
+		Imovel imovel = this.findById(id);
+		
+		if(imovel != null) {
+			
+			if(!imovel.getDisponivel()) {
+				locacaoService.delete(locacaoService.findByImovel(imovel));
+			}
+			
+			imovelRepository.delete(imovel);
+			
+			return true;
 		}
 		
-		imovelRepository.delete(imovel);
+		return false;
 	}
 	
 	public Imovel findById(Integer id) {
@@ -67,41 +79,29 @@ public class ImovelService {
 		return imovel.get();
 	}
 	
-	public List<Imovel> findAll(){
+	public Page<Imovel> findAll(Integer page, Integer size){
 		
-		List<Imovel> imoveis;
+		PageRequest pageable = PageRequest.of(page, size);
 		
-		try {
-			imoveis = imovelRepository.findAll();
-		}catch(Exception ex) {
-			return null;
-		}
-		
-		if(imoveis.isEmpty()) {
-			return null;
-		}
+		Page<Imovel> imoveis = this.imovelRepository.findAll(pageable);
 		
 		return imoveis;
 	}
 	
-	public List<Imovel> findByDisponivel(){
+	public Page<Imovel> findByDisponivel(Integer page, Integer size){
 		
-		List<Imovel> imoveis = imovelRepository.findByDisponivel(true);
+		PageRequest pageable = PageRequest.of(page, size,Direction.ASC,"preco");
 		
-		if(imoveis.isEmpty()) {
-			return null;
-		}
+		Page<Imovel> imoveis = imovelRepository.findByDisponivel(true, pageable);
 		
 		return imoveis;
 	}
 	
-	public List<Imovel> findByDisponivel(Double preco){
+	public Page<Imovel> findByDisponivel(Double preco,Integer page,Integer size){
 		
-		List<Imovel> imoveis = imovelRepository.findByPrecoLessThanEqualAndDisponivel(preco,true);
+		PageRequest pageable = PageRequest.of(page, size,Direction.ASC, "preco");
 		
-		if(imoveis.isEmpty()) {
-			return null;
-		}
+		Page<Imovel> imoveis = imovelRepository.findByPrecoLessThanEqualAndDisponivel(preco,true,pageable);
 		
 		return imoveis;
 	}

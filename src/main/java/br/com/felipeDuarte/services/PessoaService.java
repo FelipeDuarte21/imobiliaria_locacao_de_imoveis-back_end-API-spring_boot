@@ -116,7 +116,7 @@ public class PessoaService {
 			
 			if(p.getImoveis().size() > 0) {
 				p.getImoveis().forEach(imovel -> {
-					imovelService.delete(imovel);
+					imovelService.delete(imovel.getIdImovel());
 				});
 			}
 			
