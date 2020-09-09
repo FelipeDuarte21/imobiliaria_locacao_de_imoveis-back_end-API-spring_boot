@@ -25,7 +25,7 @@ public interface ImovelRepository extends JpaRepository<Imovel,Integer>{
 	
 	@Query(value = "SELECT * FROM imovel i JOIN pessoa p ON i.id_proprietario = p.id "
 			+ "WHERE p.nome LIKE %?1% ",nativeQuery = true)
-	public List<Imovel> findByNomeProprietario(String nome);
+	public Page<Imovel> findByNomeProprietario(String nome,Pageable pageable);
 	
 	
 }

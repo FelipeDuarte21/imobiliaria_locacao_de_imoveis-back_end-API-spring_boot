@@ -127,13 +127,12 @@ public class ImovelResource {
 	}
 	
 	@GetMapping("/proprietario/search")
-	private ResponseEntity<List<Imovel>> findByNome(@RequestParam(defaultValue = "") String nome){
+	private ResponseEntity<Page<Imovel>> findByNome(
+			@RequestParam(defaultValue = "") String nome,
+			@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = "6") Integer size){
 		
-		List<Imovel> imoveis = imovelService.findByNomeProprietario(nome);
-		
-		if(imoveis == null) {
-			throw new ObjectNotFoundException("Não há nenhum imóvel para este proprietário!");
-		}
+		Page<Imovel> imoveis = imovelService.findByNomeProprietario(nome,page,size);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(imoveis);
 	}

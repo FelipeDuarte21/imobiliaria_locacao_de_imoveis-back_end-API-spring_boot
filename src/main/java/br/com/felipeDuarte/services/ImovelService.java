@@ -117,18 +117,16 @@ public class ImovelService {
 		return imoveis;
 	}
 	
-	public List<Imovel> findByNomeProprietario(String nome){
+	public Page<Imovel> findByNomeProprietario(String nome,Integer page,Integer size){
 		
-		List<Imovel> imoveis;
+		PageRequest pageable = PageRequest.of(page, size,Direction.ASC,"preco");
+		
+		Page<Imovel> imoveis;
 		
 		if(nome.isEmpty() || nome == null) {
-			imoveis = imovelRepository.findAll();
+			imoveis = imovelRepository.findAll(pageable);
 		}else {
-			imoveis = imovelRepository.findByNomeProprietario(nome);
-		}
-		
-		if(imoveis.isEmpty()) {
-			return null;
+			imoveis = imovelRepository.findByNomeProprietario(nome,pageable);
 		}
 		
 		return imoveis;
