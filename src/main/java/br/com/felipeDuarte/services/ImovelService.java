@@ -57,7 +57,7 @@ public class ImovelService {
 		if(imovel != null) {
 			
 			if(!imovel.getDisponivel()) {
-				locacaoService.delete(locacaoService.findByImovel(imovel));
+				locacaoService.delete(locacaoService.findByImovel(imovel).getIdLocacao());
 			}
 			
 			imovelRepository.delete(imovel);

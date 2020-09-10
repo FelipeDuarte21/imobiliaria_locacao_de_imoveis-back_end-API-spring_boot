@@ -1,10 +1,9 @@
 package br.com.felipeDuarte.resources;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.felipeDuarte.domain.Locacao;
@@ -21,15 +22,16 @@ import br.com.felipeDuarte.resources.exception.ObjectBadRequestException;
 import br.com.felipeDuarte.resources.exception.ObjectNotFoundException;
 import br.com.felipeDuarte.services.LocacaoService;
 
-@CrossOrigin("http://localhost")
+@CrossOrigin
 @RestController
+@RequestMapping("/locacao")
 public class LocacaoResource {
 
 	@Autowired
 	private LocacaoService locacaoService;
 	
-	@PostMapping("/locacao")
-	private ResponseEntity<?> save(@Valid @RequestBody Locacao locacao) {
+	@PostMapping
+	private ResponseEntity<Locacao> save(@Valid @RequestBody Locacao locacao) {
 		
 		Locacao l = locacaoService.save(locacao);
 		
@@ -41,8 +43,8 @@ public class LocacaoResource {
 		
 	}
 	
-	@PutMapping("/locacao")
-	private ResponseEntity<?> update(@Valid @RequestBody Locacao locacao){
+	@PutMapping
+	private ResponseEntity<Locacao> update(@Valid @RequestBody Locacao locacao){
 		
 		Locacao l = locacaoService.update(locacao);
 		
@@ -53,49 +55,49 @@ public class LocacaoResource {
 		return ResponseEntity.status(HttpStatus.OK).body(l);
 	}
 	
-	@DeleteMapping("/locacao")
-	private ResponseEntity<?> delete(@Valid @RequestBody Locacao locacao) {
+	@DeleteMapping("/{id}")
+	private ResponseEntity<?> delete(@PathVariable Integer id) {
 		
-		locacaoService.delete(locacao);
+		boolean confirma =  locacaoService.delete(id);
 		
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
+		if(confirma) {
+			return ResponseEntity.status(HttpStatus.OK).build();
+		}else {
+			throw new ObjectNotFoundException("Id Inválido!");
+		}
 		
 	}
 	
-	@GetMapping("/locacao/{id}")
-	private ResponseEntity<?> findById(@PathVariable Integer id) {
+	@GetMapping("/{id}")
+	private ResponseEntity<Locacao> findById(@PathVariable Integer id) {
 		
 		Locacao l = locacaoService.findById(id);
 		
 		if(l == null) {
-			throw new ObjectNotFoundException("Nenhuma locação encontrada!");
+			throw new ObjectNotFoundException("Nenhuma locação encontrada para o id informado!");
 		}
 		
 		return ResponseEntity.status(HttpStatus.OK).body(l);
 	}
 	
-	@GetMapping("/locacao")
-	private List<Locacao> findAll(){
+	@GetMapping
+	private ResponseEntity<Page<Locacao>> findAll(
+			@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = "6") Integer size){
 		
-		List<Locacao> locacoes = locacaoService.findAll();
+		Page<Locacao> locacoes = locacaoService.findAll(page,size);
 		
-		if(locacoes == null) {
-			throw new ObjectNotFoundException("Nenhuma locação cadastrada!");
-		}
-		
-		return locacoes;
+		return ResponseEntity.status(HttpStatus.OK).body(locacoes);
 	}
 	
-	@GetMapping("/locacao/inquilino/{id}")
-	private List<Locacao> findByInquilino(@PathVariable Integer id){
+	@GetMapping("/inquilino/{id}")
+	private ResponseEntity<Page<Locacao>> findByInquilino(@PathVariable Integer id,
+			@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = "6") Integer size){
 		
-		List<Locacao> locacoes = locacaoService.findByInquilino(id);
+		Page<Locacao> locacoes = locacaoService.findByInquilino(id,page,size);
 		
-		if(locacoes == null) {
-			throw new ObjectNotFoundException("Nenhuma locação para o inquilino informado!");
-		}
-		
-		return locacoes;
+		return ResponseEntity.status(HttpStatus.OK).body(locacoes);
 	}
 	 
 }

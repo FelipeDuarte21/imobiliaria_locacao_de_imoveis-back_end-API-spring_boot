@@ -131,7 +131,7 @@ public class PessoaService {
 			if(p.getLocacoes().size() > 0) {
 				
 				p.getLocacoes().forEach(locacao -> {
-					locacaoService.delete(locacao);
+					locacaoService.delete(locacao.getIdLocacao());
 				});
 				
 			}else {

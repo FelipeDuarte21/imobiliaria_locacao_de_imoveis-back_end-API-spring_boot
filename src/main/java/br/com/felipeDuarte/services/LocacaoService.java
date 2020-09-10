@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.felipeDuarte.domain.Aluguel;
@@ -37,7 +40,7 @@ public class LocacaoService {
 			return null;
 		}
 		
-		locacao.setAlugueis(createAluguel(locacao));
+		locacao.setAlugueis(this.createAluguel(locacao));
 		
 		locacaoRepository.save(locacao);
 		
@@ -100,7 +103,13 @@ public class LocacaoService {
 		return locacao;
 	}
 	
-	public void delete(Locacao locacao) {
+	public boolean delete(Integer id) {
+		
+		Locacao locacao = this.findById(id);
+		
+		if(locacao == null) {
+			return false;
+		}
 		
 		Locacao l = this.findById(locacao.getIdLocacao());
 		
@@ -117,7 +126,7 @@ public class LocacaoService {
 		}
 		
 		locacaoRepository.delete(l);
-		
+		return true;
 	}
 	
 	public Locacao findById(Integer id) {
@@ -131,8 +140,18 @@ public class LocacaoService {
 		return l.get();
 	}
 	
-	public List<Locacao> findAll(){
-		List<Locacao> locacoes = locacaoRepository.findAll();
+	public Page<Locacao> findAll(Integer page,Integer size){
+		
+		PageRequest pageable = PageRequest.of(page, size,Direction.ASC,"data");
+		
+		Page<Locacao> locacoes = locacaoRepository.findAll(pageable);
+		
+		return locacoes;
+	}
+	
+	private List<Locacao> findByInquilino(Integer id){
+		
+		List<Locacao> locacoes = locacaoRepository.findByInquilino(pessoaService.findById(id));
 		
 		if(locacoes.isEmpty()) {
 			return null;
@@ -141,12 +160,11 @@ public class LocacaoService {
 		return locacoes;
 	}
 	
-	public List<Locacao> findByInquilino(Integer id){
-		List<Locacao> locacoes = locacaoRepository.findByInquilino(pessoaService.findById(id));
+	public Page<Locacao> findByInquilino(Integer id,Integer page,Integer size){
 		
-		if(locacoes.isEmpty()) {
-			return null;
-		}
+		PageRequest pageable = PageRequest.of(page, size,Direction.ASC,"data");
+		
+		Page<Locacao> locacoes = locacaoRepository.findByInquilino(pessoaService.findById(id),pageable);
 		
 		return locacoes;
 	}
