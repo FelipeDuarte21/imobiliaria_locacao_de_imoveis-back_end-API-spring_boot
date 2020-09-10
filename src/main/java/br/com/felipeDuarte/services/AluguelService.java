@@ -1,12 +1,14 @@
 package br.com.felipeDuarte.services;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.felipeDuarte.domain.Aluguel;
@@ -56,18 +58,18 @@ public class AluguelService {
 		return aluguel.get();
 	}
 	
-	public List<Aluguel> findByLocacao(Integer id){
+	public Page<Aluguel> findByLocacao(Integer id, Integer page, Integer size){
 		
-		List<Aluguel> alugueis = aluguelRepository.findByLocacao(locacaoService.findById(id));
+		PageRequest pageable = PageRequest.of(page, size,Direction.ASC,"dataVencimento");
 		
-		if(alugueis.isEmpty()) {
-			return null;
-		}
+		Page<Aluguel> alugueis = aluguelRepository.findByLocacao(locacaoService.findById(id),pageable);
 		
 		return alugueis;
 	}
 	
-	public List<Aluguel> findByPeriodo(String inicio,String fim){
+	public Page<Aluguel> findByPeriodo(String inicio,String fim,Integer page,Integer size){
+		
+		PageRequest pageable = PageRequest.of(page, size,Direction.ASC,"dataVencimento");
 		
 		Calendar dataInicio = Calendar.getInstance();
 		Calendar dataFim = Calendar.getInstance();
@@ -82,23 +84,17 @@ public class AluguelService {
 				Integer.parseInt(datas[1]) - 1,
 				Integer.parseInt(datas[0]));
 		
-		List<Aluguel> alugueis = 
-		aluguelRepository.findByDataVencimentoBetweenOrderByDataVencimento(dataInicio.getTime(), dataFim.getTime());
-		
-		if(alugueis.isEmpty()) {
-			return null;
-		}
+		Page<Aluguel> alugueis = 
+		aluguelRepository.findByDataVencimentoBetweenOrderByDataVencimento(dataInicio.getTime(), dataFim.getTime(),pageable);
 		
 		return alugueis;
 	}
 	
-	public List<Aluguel> findAll(){
+	public Page<Aluguel> findAll(Integer page,Integer size){
 		
-		List<Aluguel> alugueis = aluguelRepository.findAll();
+		PageRequest pageable = PageRequest.of(page, size,Direction.ASC,"dataVencimento");
 		
-		if(alugueis.isEmpty()) {
-			return null;
-		}
+		Page<Aluguel> alugueis = aluguelRepository.findAll(pageable);
 		
 		return alugueis;
 	}
@@ -107,33 +103,16 @@ public class AluguelService {
 		aluguelRepository.delete(aluguel);
 	}
 	
-	public List<Aluguel> findAllAtrasados(){
+	public Page<Aluguel> findAllAtrasados(Integer page,Integer size){
+		
+		PageRequest pageable = PageRequest.of(page, size,Direction.ASC, "dataVencimento");
+		
 		Date hora = new Date();
-		long dataAtual = hora.getTime();
 		
+		Page<Aluguel> alugueis = 
+				this.aluguelRepository.findByDataVencimentoLessThanOrderByDataVencimento(hora, pageable);
 		
-		
-		List<Aluguel> alugueis = findAll();
-		
-		if(alugueis == null) {
-			return null;
-		}else {
-			
-			List<Aluguel> alugueisAtrasados = new ArrayList<>();
-		
-			alugueis.forEach(aluguel -> {
-				if(aluguel.getDataVencimento().getTime() < dataAtual) {
-					alugueisAtrasados.add(aluguel);
-				}
-			});
-			
-			if(alugueisAtrasados.isEmpty()) {
-				return null;
-			}
-			
-			return alugueisAtrasados;
-		}
-		
+		return alugueis;
 	}
 	
 }

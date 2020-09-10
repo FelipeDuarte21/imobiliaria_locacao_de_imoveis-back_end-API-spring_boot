@@ -1,10 +1,9 @@
 package br.com.felipeDuarte.resources;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,15 +20,16 @@ import br.com.felipeDuarte.resources.exception.ObjectBadRequestException;
 import br.com.felipeDuarte.resources.exception.ObjectNotFoundException;
 import br.com.felipeDuarte.services.AluguelService;
 
-@CrossOrigin("http://localhost")
+@CrossOrigin
 @RestController
+@RequestMapping("/aluguel")
 public class AluguelResource {
 
 	@Autowired
 	private AluguelService aluguelService;
 	
-	@PutMapping("/aluguel")
-	private ResponseEntity<?> recordPayment(@Valid @RequestBody Aluguel aluguel){
+	@PutMapping
+	private ResponseEntity<Aluguel> recordPayment(@Valid @RequestBody Aluguel aluguel){
 		
 		Aluguel a = aluguelService.recordPayment(aluguel);
 		
@@ -39,8 +40,8 @@ public class AluguelResource {
 		return ResponseEntity.status(HttpStatus.OK).body(a);
 	}
 	
-	@GetMapping("/aluguel/{id}")
-	private ResponseEntity<?> findById(@PathVariable Integer id){
+	@GetMapping("/{id}")
+	private ResponseEntity<Aluguel> findById(@PathVariable Integer id){
 		
 		Aluguel aluguel = aluguelService.findById(id);
 		
@@ -51,52 +52,46 @@ public class AluguelResource {
 		return ResponseEntity.status(HttpStatus.OK).body(aluguel);
 	}
 	
-	@GetMapping("/aluguel/locacao/{id}")
-	private List<Aluguel> findByInquilino(@PathVariable Integer id){
+	@GetMapping("/locacao/{id}")
+	private ResponseEntity<Page<Aluguel>> findByInquilino(@PathVariable Integer id,
+			@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = "6") Integer size){
 		
-		List<Aluguel> alugueis = aluguelService.findByLocacao(id);
+		Page<Aluguel> alugueis = aluguelService.findByLocacao(id,page,size);
 		
-		if(alugueis == null) {
-			throw new ObjectNotFoundException("Nenhum aluguel encontrado para a locação informada!");
-		}
-		
-		return alugueis;
+		return ResponseEntity.status(HttpStatus.OK).body(alugueis);
 	}
 	
-	@GetMapping("/aluguel/periodo")
-	private List<Aluguel> findByPeriodo(@RequestParam(name="inicio") String inicio,@RequestParam(name="fim") String fim){
+	@GetMapping("/periodo")
+	private ResponseEntity<Page<Aluguel>> findByPeriodo(
+			@RequestParam(name="inicio") String inicio,
+			@RequestParam(name="fim") String fim,
+			@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = "6") Integer size){
 		
-		List<Aluguel> alugueis = aluguelService.findByPeriodo(inicio, fim);
+		Page<Aluguel> alugueis = aluguelService.findByPeriodo(inicio, fim, page, size);
 		
-		if(alugueis.isEmpty()) {
-			throw new ObjectNotFoundException("Nenhum aluguel encontrado para o período informado!");
-		}
-		
-		return alugueis;
+		return ResponseEntity.status(HttpStatus.OK).body(alugueis);
 	}
 	
-	@GetMapping("/aluguel")
-	private List<Aluguel> findAll(){
+	@GetMapping
+	private ResponseEntity<Page<Aluguel>> findAll(
+			@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = "6") Integer size){
 		
-		List<Aluguel> alugueis = aluguelService.findAll();
+		Page<Aluguel> alugueis = aluguelService.findAll(page,size);
 		
-		if(alugueis == null) {
-			throw new ObjectNotFoundException("Nenhum aluguel cadastrado!");
-		}
-		
-		return alugueis;
+		return ResponseEntity.status(HttpStatus.OK).body(alugueis);
 	}
 	
-	@GetMapping("/aluguel/atrasados")
-	private List<Aluguel> findAllAtrasados(){
+	@GetMapping("/atrasados")
+	private ResponseEntity<Page<Aluguel>> findAllAtrasados(
+			@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = "6") Integer size){
 		
-		List<Aluguel> alugueis = aluguelService.findAllAtrasados();
+		Page<Aluguel> alugueis = aluguelService.findAllAtrasados(page,size);
 		
-		if(alugueis == null) {
-			throw new ObjectNotFoundException("Nenhum aluguel atrasado!");
-		}
-		
-		return alugueis;
+		return ResponseEntity.status(HttpStatus.OK).body(alugueis);
 	}
 	
 }
