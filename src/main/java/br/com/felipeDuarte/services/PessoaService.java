@@ -1,10 +1,12 @@
 package br.com.felipeDuarte.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
@@ -165,6 +167,20 @@ public class PessoaService {
 			this.pessoaRepository.findByAtivoAndTipoPessoaOrTipoPessoa(true,tipo, tipo2,pg);
 		
 		return pageResp;	
+	}
+	
+	public List<Pessoa> findAllProprietarios(){
+		
+		List<Pessoa> proprietarios = 
+			this.pessoaRepository.findByAtivoAndTipoPessoaOrTipoPessoa(
+					true,TipoPessoa.PROPRIETARIO.getCod(), TipoPessoa.PROPRIETARIO_E_INQUILINO.getCod(), 
+						Sort.by(Direction.ASC, "nome"));
+		
+		if(proprietarios.isEmpty()) {
+			return null;
+		}
+		
+		return proprietarios;
 	}
 
 	public Page<Pessoa> findAllProprietarios(Integer page,Integer size){

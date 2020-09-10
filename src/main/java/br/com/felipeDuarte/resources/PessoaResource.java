@@ -1,5 +1,7 @@
 package br.com.felipeDuarte.resources;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,7 @@ public class PessoaResource {
 	}
 	
 	@PostMapping
-	private ResponseEntity<?> save(@Valid @RequestBody Pessoa pessoa) {
+	private ResponseEntity<Pessoa> save(@Valid @RequestBody Pessoa pessoa) {
 		
 		Pessoa p  = pessoaService.save(pessoa);
 		
@@ -54,7 +56,7 @@ public class PessoaResource {
 	}
 	
 	@PutMapping
-	private ResponseEntity<?> update(@Valid @RequestBody Pessoa pessoa) {
+	private ResponseEntity<Pessoa> update(@Valid @RequestBody Pessoa pessoa) {
 		
 		Pessoa p = pessoaService.update(pessoa);
 		
@@ -88,6 +90,18 @@ public class PessoaResource {
 		}
 		
 		return ResponseEntity.status(HttpStatus.OK).body(p);
+	}
+	
+	@GetMapping("/proprietarios/all")
+	private ResponseEntity<List<Pessoa>> findAllProprietarios(){
+		
+		List<Pessoa> proprietarios = this.pessoaService.findAllProprietarios();
+		
+		if(proprietarios == null) {
+			throw new ObjectNotFoundException("Nenhum Proprietário Cadastrado!");
+		}
+		
+		return ResponseEntity.status(HttpStatus.OK).body(proprietarios);
 	}
 	
 	@GetMapping("/proprietarios")
