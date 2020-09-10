@@ -189,6 +189,19 @@ public class PessoaService {
 					page,size);
 	}
 	
+	public List<Pessoa> findAllInquilinos(){
+		
+		List<Pessoa> inquilinos = this.pessoaRepository.findByAtivoAndTipoPessoaOrTipoPessoa(
+				true,TipoPessoa.INQUILINO.getCod(), TipoPessoa.PROPRIETARIO_E_INQUILINO.getCod(), 
+				Sort.by(Direction.ASC, "nome"));
+		
+		if(inquilinos.isEmpty()) {
+			return null;
+		}
+		
+		return inquilinos;
+	}
+	
 	public Page<Pessoa> findAllInquilinos(Integer page,Integer size){
 		return this.findAll(
 				TipoPessoa.INQUILINO.getCod(), TipoPessoa.PROPRIETARIO_E_INQUILINO.getCod(), 

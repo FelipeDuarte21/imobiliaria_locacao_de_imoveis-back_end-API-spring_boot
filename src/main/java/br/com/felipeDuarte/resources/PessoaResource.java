@@ -124,6 +124,17 @@ public class PessoaResource {
 		return ResponseEntity.status(HttpStatus.OK).body(pageProps);
 	}
 	
+	@GetMapping("/inquilinos/all")
+	private ResponseEntity<List<Pessoa>> findAllInquilinos(){
+		
+		List<Pessoa> inquilinos = this.pessoaService.findAllInquilinos();
+		
+		if(inquilinos == null) {
+			throw new ObjectNotFoundException("Nenhum Inquilino Cadastrado!");
+		}
+		
+		return ResponseEntity.status(HttpStatus.OK).body(inquilinos);
+	}
 	
 	@GetMapping("/inquilinos")
 	private ResponseEntity<Page<Pessoa>> findAllInquilinos(
