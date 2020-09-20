@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.felipeDuarte.domain.Imovel;
+import br.com.felipeDuarte.domain.dto.ImovelDTO;
 import br.com.felipeDuarte.resources.exception.ObjectBadRequestException;
 import br.com.felipeDuarte.resources.exception.ObjectNotFoundException;
 import br.com.felipeDuarte.services.ImovelService;
@@ -34,7 +35,7 @@ public class ImovelResource {
 	
 	
 	@PostMapping
-	private ResponseEntity<Imovel> save(@Valid @RequestBody Imovel imovel){
+	private ResponseEntity<Imovel> save(@Valid @RequestBody ImovelDTO imovel){
 		
 		Imovel i = imovelService.save(imovel);
 		
@@ -42,17 +43,25 @@ public class ImovelResource {
 			throw new ObjectBadRequestException("Imóvel Já cadastrado!");
 		}
 		
+		if(i.getProprietario() == null) {
+			throw new ObjectNotFoundException("Proprietário do Imóvel não Encontrado!");
+		}
+		
 		return ResponseEntity.status(HttpStatus.CREATED).body(i);
 		
 	}
 	
 	@PutMapping
-	private ResponseEntity<Imovel> update(@Valid @RequestBody Imovel imovel){
+	private ResponseEntity<Imovel> update(@Valid @RequestBody ImovelDTO imovel){
 		
 		Imovel i = imovelService.update(imovel);
 		
 		if(i == null) {
 			throw new ObjectBadRequestException("Falha ao tentar atualizar!");
+		}
+		
+		if(i.getProprietario() == null) {
+			throw new ObjectNotFoundException("Proprietário do Imóvel não Encontrado!");
 		}
 		
 		return ResponseEntity.status(HttpStatus.OK).body(i);

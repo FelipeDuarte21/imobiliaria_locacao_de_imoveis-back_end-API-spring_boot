@@ -10,6 +10,8 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.felipeDuarte.domain.Imovel;
+import br.com.felipeDuarte.domain.Pessoa;
+import br.com.felipeDuarte.domain.dto.ImovelDTO;
 import br.com.felipeDuarte.repositories.ImovelRepository;
 
 @Service
@@ -27,8 +29,37 @@ public class ImovelService {
 	@Autowired
 	private LocacaoService locacaoService;
 	
+	private Imovel converteImovelDTO(ImovelDTO imovelDTO) {
+		
+		//Dados Gerais
+		Imovel i = new Imovel();
+		i.setIdImovel(imovelDTO.getIdImovel());
+		i.setPreco(imovelDTO.getPreco());
+		i.setDescricao(imovelDTO.getDescricao());
+		i.setTipo(imovelDTO.getTipo());
+		i.setDisponivel(true);
+		
+		//Endereco
+		i.setEndereco(this.enderecoService.estruturaEndereco(imovelDTO.getEndereco()));
+		
+		//Proprietario
+		Pessoa p = this.pessoaService.findById(imovelDTO.getIdProprietario());
+		if(p == null) {
+			i.setProprietario(null);
+		}else {
+			i.setProprietario(p);
+		}
+		
+		return i;
+	}
 	
-	public Imovel save(Imovel imovel) {
+	public Imovel save(ImovelDTO imovelDTO) {
+		
+		Imovel imovel = this.converteImovelDTO(imovelDTO);
+		
+		if(imovel.getProprietario() == null) {
+			return imovel;
+		}
 		
 		enderecoService.save(imovel.getEndereco());
 		
@@ -39,6 +70,16 @@ public class ImovelService {
 		imovelRepository.save(imovel);
 		
 		return imovel;
+	}
+	
+	public Imovel update(ImovelDTO imovelDTO) {
+		
+		Imovel imovel = this.converteImovelDTO(imovelDTO);
+		if(imovel.getProprietario() == null) {
+			return imovel;
+		}
+		
+		return this.update(imovel);
 	}
 	
 	public Imovel update(Imovel imovel) {
