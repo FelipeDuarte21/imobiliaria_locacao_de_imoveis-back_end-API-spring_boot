@@ -1,5 +1,7 @@
 package br.com.felipeDuarte.resources;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,6 +136,18 @@ public class LocacaoResource {
 			@RequestParam(defaultValue = "6") Integer size){
 		
 		Page<Locacao> locacoes = locacaoService.findAll(page,size);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(locacoes);
+	}
+	
+	@GetMapping("/all")
+	private ResponseEntity<List<Locacao>> findAll(){
+		
+		List<Locacao> locacoes = this.locacaoService.findAll();
+		
+		if(locacoes == null) {
+			throw new ObjectNotFoundException("Não Há Locações Cadastradas!");
+		}
 		
 		return ResponseEntity.status(HttpStatus.OK).body(locacoes);
 	}

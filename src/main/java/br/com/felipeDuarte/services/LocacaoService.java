@@ -190,6 +190,17 @@ public class LocacaoService {
 		return locacoes;
 	}
 	
+	public List<Locacao> findAll(){
+		
+		List<Locacao> locacoes = this.locacaoRepository.findAll();
+		
+		if(locacoes.isEmpty()) {
+			return null;
+		}
+		
+		return locacoes;
+	}
+	
 	private List<Locacao> findByInquilino(Integer id){
 		
 		List<Locacao> locacoes = locacaoRepository.findByInquilino(pessoaService.findById(id));
