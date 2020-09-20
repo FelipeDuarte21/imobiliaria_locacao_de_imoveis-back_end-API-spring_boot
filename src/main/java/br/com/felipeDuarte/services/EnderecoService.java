@@ -10,6 +10,7 @@ import br.com.felipeDuarte.domain.Endereco;
 import br.com.felipeDuarte.domain.Estado;
 import br.com.felipeDuarte.domain.LogradouroCep;
 import br.com.felipeDuarte.domain.Numero;
+import br.com.felipeDuarte.domain.dto.EnderecoDTO;
 import br.com.felipeDuarte.repositories.BairroRepository;
 import br.com.felipeDuarte.repositories.CidadeRepository;
 import br.com.felipeDuarte.repositories.ComplementoRepository;
@@ -112,5 +113,31 @@ public class EnderecoService {
 		
 		return endereco;
 	}
+	
+	public Endereco estruturaEndereco(EnderecoDTO enderecoDTO) {
+		
+		Endereco e = new Endereco();
+		e.setLogradouroCep(new LogradouroCep());
+		e.getLogradouroCep().setBairro(new Bairro());
+		e.getLogradouroCep().getBairro().setCidade(new Cidade());
+		e.getLogradouroCep().getBairro().getCidade().setEstado(new Estado());
+		e.setNumero(new Numero());
+		
+		e.getLogradouroCep().setCep(enderecoDTO.getCep());
+		e.getLogradouroCep().setLogradouro(enderecoDTO.getLogradouro());
+		e.getLogradouroCep().getBairro().setNome(enderecoDTO.getBairro());
+		e.getLogradouroCep().getBairro().getCidade().setNome(enderecoDTO.getCidade());
+		e.getLogradouroCep().getBairro().getCidade().getEstado().setNome(enderecoDTO.getEstado());
+		e.getNumero().setNumero(enderecoDTO.getNumero());
+		
+		if(enderecoDTO.getComplemento() != null) {
+			e.getLogradouroCep().setComplemento(new Complemento());
+			e.getLogradouroCep().getComplemento().setComplemento(enderecoDTO.getComplemento());
+		}
+		
+		return e;
+	}
+	
+	
 	
 }

@@ -10,7 +10,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import br.com.felipeDuarte.domain.Contato;
 import br.com.felipeDuarte.domain.Pessoa;
+import br.com.felipeDuarte.domain.dto.PessoaDTO;
 import br.com.felipeDuarte.domain.enums.TipoPessoa;
 import br.com.felipeDuarte.repositories.ContatoRepository;
 import br.com.felipeDuarte.repositories.PessoaRepository;
@@ -99,12 +101,46 @@ public class PessoaService {
 		return pessoa;
 	}
 	
-	public Pessoa save(Pessoa pessoa) {
-		return this.logicaSaveUpdate(pessoa, true);
+	private Pessoa convertePessoaDTO(PessoaDTO pessoaDTO) {
+		
+		//Dados Pessoais
+		Pessoa pessoa = new Pessoa();
+		pessoa.setIdPessoa(pessoaDTO.getIdPessoa());
+		pessoa.setTipoPessoa(pessoaDTO.getTipoPessoa());
+		pessoa.setNome(pessoaDTO.getNome());
+		pessoa.setNacionalidade(pessoaDTO.getNacionalidade());
+		pessoa.setEstadoCivil(pessoaDTO.getEstadoCivil());
+		pessoa.setDataNascimento(pessoaDTO.getDataNascimento());
+		pessoa.setIdentidade(pessoaDTO.getIdentidade());
+		pessoa.setOrgaoEmissor(pessoaDTO.getOrgaoEmissor());
+		pessoa.setDataExpedicao(pessoaDTO.getDataExpedicao());
+		pessoa.setCpf(pessoaDTO.getCpf());
+		pessoa.setSalario(pessoaDTO.getSalario());
+		pessoa.setEmail(pessoaDTO.getEmail());
+		pessoa.setAtivo(true);
+		
+		//Contatos
+		pessoaDTO.getContatos().forEach(contato -> {
+			Contato c = new Contato();
+			c.setIdContato(contato.getIdContato());
+			c.setTipoContato(contato.getTipoContato());
+			c.setNumero(contato.getNumero());
+			c.setPessoa(pessoa);
+			pessoa.getContatos().add(c);
+		});
+		
+		//Endereco
+		pessoa.setEndereco(this.enderecoService.estruturaEndereco(pessoaDTO.getEndereco()));
+		
+		return pessoa;
 	}
 	
-	public Pessoa update(Pessoa pessoa) {
-		return this.logicaSaveUpdate(pessoa, false);
+	public Pessoa save(PessoaDTO pessoaDTO) {
+		return this.logicaSaveUpdate(this.convertePessoaDTO(pessoaDTO), true);
+	}
+	
+	public Pessoa update(PessoaDTO pessoa) {
+		return this.logicaSaveUpdate(this.convertePessoaDTO(pessoa), false);
 	}
 	
 	public boolean delete(Integer id){

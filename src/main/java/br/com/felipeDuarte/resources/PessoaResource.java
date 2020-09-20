@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.felipeDuarte.domain.Pessoa;
+import br.com.felipeDuarte.domain.dto.PessoaDTO;
 import br.com.felipeDuarte.resources.exception.ObjectBadRequestException;
 import br.com.felipeDuarte.resources.exception.ObjectNotFoundException;
 import br.com.felipeDuarte.services.PessoaService;
@@ -44,7 +45,7 @@ public class PessoaResource {
 	}
 	
 	@PostMapping
-	private ResponseEntity<Pessoa> save(@Valid @RequestBody Pessoa pessoa) {
+	private ResponseEntity<Pessoa> save(@Valid @RequestBody PessoaDTO pessoa) {
 		
 		Pessoa p  = pessoaService.save(pessoa);
 		
@@ -56,7 +57,7 @@ public class PessoaResource {
 	}
 	
 	@PutMapping
-	private ResponseEntity<Pessoa> update(@Valid @RequestBody Pessoa pessoa) {
+	private ResponseEntity<Pessoa> update(@Valid @RequestBody PessoaDTO pessoa) {
 		
 		Pessoa p = pessoaService.update(pessoa);
 		
