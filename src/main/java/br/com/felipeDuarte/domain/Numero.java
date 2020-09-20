@@ -11,10 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,9 +25,6 @@ public class Numero implements Serializable{
 	@Column(name = "id")
 	private Integer idNumero;
 	
-	@NotNull(message = "Informe o número do endereço")
-	@NotBlank(message = "Informe o número do endereço")
-	@Length(max = 10, message = "Informe um número até {max} caracteres")
 	private String numero;
 	
 	@JsonIgnore

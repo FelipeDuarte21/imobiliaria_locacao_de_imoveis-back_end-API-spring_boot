@@ -11,10 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,9 +25,6 @@ public class Estado implements Serializable{
 	@Column(name = "id")
 	private Integer idEstado;
 	
-	@NotNull(message = "Informe um estado")
-	@NotBlank(message = "Informe um estado")
-	@Length(max = 2, min=2, message = "O estado tem que ter {max} caracteres")
 	private String nome;
 	
 	@JsonIgnore

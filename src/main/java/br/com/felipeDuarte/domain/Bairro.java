@@ -13,10 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -31,12 +27,8 @@ public class Bairro implements Serializable{
 	@Column(name = "id")
 	private Integer idBairro;
 	
-	@NotNull(message = "Informe o nome do bairro")
-	@NotBlank(message = "Informe o nome do bairro")
-	@Length(max = 50, message = "Informe o nome até {max} caractere")
 	private String nome;
 	
-	@NotNull(message = "Informe a cidade")
 	@ManyToOne
 	@JoinColumn(name = "id_Cidade")
 	private Cidade cidade;

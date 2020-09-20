@@ -17,10 +17,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -36,36 +32,27 @@ public class Locacao implements Serializable{
 	@Column(name = "id")
 	private Integer idLocacao;
 	
-	@NotNull(message = "Informe a data da locação")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	private Date data;
 	
-	@NotNull(message = "Informe o tempo da locação")
-	@NotBlank(message = "Informe o tempo da locação")
-	@Length(max = 5, message = "Informe o tempo em até {max} caracteres")
 	private String tempo;
-	
-	@NotNull(message = "Informe a data de início da locação")
+
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	private Date dataInicio;
 	
-	@NotNull(message = "Informe o data de término da locação")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	private Date dataTermino;
 	
-	@NotNull(message = "Informe o valor da locação")
 	@Column(precision = 2)
 	private Double valor;
 	
-	@NotNull(message = "Informe o imóvel da locação")
 	@OneToOne
 	@JoinColumn(name = "id_Imovel")
 	private Imovel imovel;
 	
-	@NotNull(message = "Informe o inquilino")
 	@ManyToOne
 	@JoinColumn(name = "id_Inquilino")
 	private Pessoa inquilino;

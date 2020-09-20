@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -28,19 +27,17 @@ public class Aluguel implements Serializable{
 	@Column(name = "id")
 	private Integer idAluguel;
 	
-	@NotNull(message = "informe a data de vencimento")
-	@JsonFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dataVencimento;
 	
 	@Column(nullable = true, columnDefinition="boolean default '0'")
 	private Boolean quite;
 	
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
-	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dataPagamento;
 	
-	@NotNull(message = "informe a locação correspondente")
 	@ManyToOne
 	@JoinColumn(name = "id_locacao")
 	private Locacao locacao;

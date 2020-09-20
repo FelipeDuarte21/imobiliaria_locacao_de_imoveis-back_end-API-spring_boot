@@ -11,10 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,9 +25,6 @@ public class Complemento implements Serializable{
 	@Column(name = "id")
 	private Integer idComplemento;
 	
-	@NotNull(message = "Informe um complemento")
-	@NotBlank(message = "Informe um complemento")
-	@Length(max = 200, message = "Informe um complemento até {max} caracteres")
 	private String complemento;
 	
 	@JsonIgnore

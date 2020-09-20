@@ -10,10 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -30,13 +26,9 @@ public class Contato implements Serializable{
 	@Column(name = "id")
 	private Integer idContato;
 	
-	@NotNull(message = "Informe o tipo do número")
 	@Column(name = "tipo")
 	private Integer tipoContato;
 	
-	@NotNull(message = "Informe um número")
-	@NotBlank(message = "Informe um número")
-	@Length(min=10,max=11,message = "Número Inválido")
 	private String numero;
 	
 	@JsonBackReference

@@ -11,11 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
-
 
 @Entity
 @Table(name = "imovel")
@@ -28,29 +23,21 @@ public class Imovel implements Serializable{
 	@Column(name = "id")
 	private Integer idImovel;
 	
-	@NotNull(message = "Informe o preço do aluguel do imóvel")
 	@Column(precision = 2)
 	private Double preco;
 	
-	@NotNull(message = "Informe o tipo do imóvel(ex: Casa, Apartamento etc..)")
-	@NotBlank(message = "Informe o tipo do imóvel(ex: Casa, Apartamento etc..)")
-	@Length(max= 100, message = "Informe o tipo até {max} caracteres")
 	private String tipo;
-	
-	@NotNull(message = "Informe uma descrição do imóvel")
-	@NotBlank(message = "Informe uma descrição do imóvel")
+
 	@Column(columnDefinition = "text")
 	private String descricao;
 	
 	@Column(nullable = false, columnDefinition="boolean not null default '1'")
 	private Boolean disponivel;
 	
-	@NotNull(message = "Informe o endereço do imóvel")
 	@OneToOne
 	@JoinColumn(name = "id_Endereco")
 	private Endereco endereco;
 	
-	@NotNull(message = "Informe o proprietário")
 	@ManyToOne
 	@JoinColumn(name = "id_Proprietario")
 	private Pessoa proprietario;

@@ -10,8 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
 
 @Entity
 @Table(name = "endereco")
@@ -24,12 +22,10 @@ public class Endereco implements Serializable{
 	@Column(name = "id")
 	private Integer idEndereco;
 	
-	@NotNull(message = "Informe o logradouro")
 	@ManyToOne
 	@JoinColumn(name = "id_logradouroCep")
 	private LogradouroCep logradouroCep;
-	
-	@NotNull(message = "Informe o numero do endereço")
+
 	@ManyToOne
 	@JoinColumn(name = "id_numero")
 	private Numero numero;

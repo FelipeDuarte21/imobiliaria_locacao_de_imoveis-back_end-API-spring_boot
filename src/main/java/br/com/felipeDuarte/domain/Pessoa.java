@@ -16,10 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -39,50 +36,27 @@ public class Pessoa implements Serializable{
 	@Column(name = "id")
 	private Integer idPessoa;
 	
-	@NotNull(message = "Informe o tipo da pessoa")
 	@Column(name = "tipo")
 	private Integer tipoPessoa;
 	
-	@NotNull(message = "Informe o nome")
-	@NotBlank(message = "Informe o nome")
-	@Length(max=50,message = "Informe um nome até {max} caracteres")
 	private String nome;
-	
-	@NotNull(message = "Infome uma nacionalidade")
-	@NotBlank(message = "Informe uma nacionalidade")
-	@Length(max=50, message = "Informe uma nacionalidade até {max} caracteres")
 	private String nacionalidade;
-	
-	@NotNull(message = "Informe o estado civil")
 	private Integer estadoCivil;
 	
-	@NotNull(message = "Informe a data de nascimento")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	private Date dataNascimento;
 	
-	@NotNull(message = "Informe o número da identidade")
-	@NotBlank(message = "Informe o número da identidade")
-	@Length(max = 50, message = "Informe um número de identidade menor que {max} caracteres")
 	private String identidade;
-	
-	@NotNull(message = "Infome o orgão emissor da identidade")
-	@NotBlank(message = "Informe o orgão emissor da identidade")
-	@Length(max = 30, message = "Informe um orgão emissor menor que {max} caracteres")
 	private String orgaoEmissor;
-	
-	@NotNull(message = "Informe uma data de expedição")
+
 	@JsonFormat(pattern="dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	private Date dataExpedicao;
 	
-	@NotNull(message = "Informe um cpf")
-	@NotBlank(message = "Informe um cpf")
-	@Length(min=11,max=11,message = "Informe um cpf de {max} caracteres")
 	@Column(unique = true)
 	private String cpf;
 	
-	@Length(max=50,message = "Informe um email de até {max} caracteres")
 	private String email;
 	
 	@Column(precision = 2)
