@@ -114,6 +114,18 @@ public class ImovelResource {
 		return ResponseEntity.status(HttpStatus.OK).body(imoveis);
 	}
 	
+	@GetMapping("/disponivel/proprietario/{id}")
+	private ResponseEntity<List<Imovel>> findByDiponivel(@PathVariable Integer id){
+		
+		List<Imovel> imoveis = this.imovelService.findByDisponivel(id);
+		
+		if(imoveis == null) {
+			throw new ObjectNotFoundException("Nenhum Imóvel Disponível Encontrado Para o Id Informado!");
+		}
+		
+		return ResponseEntity.status(HttpStatus.OK).body(imoveis);
+	}
+	
 	@GetMapping("/proprietario/{id}")
 	private ResponseEntity<List<Imovel>> findByProprietario(@PathVariable Integer id){
 		

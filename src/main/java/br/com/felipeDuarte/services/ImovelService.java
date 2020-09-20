@@ -88,6 +88,18 @@ public class ImovelService {
 		return imoveis;
 	}
 	
+	public List<Imovel> findByDisponivel(Integer id){
+		
+		List<Imovel> imoveis = this.imovelRepository.findByDisponivelAndProprietario(true,
+				this.pessoaService.findById(id));
+		
+		if(imoveis.isEmpty()) {
+			return null;
+		}
+		
+		return imoveis;
+	}
+	
 	public Page<Imovel> findByDisponivel(Integer page, Integer size){
 		
 		PageRequest pageable = PageRequest.of(page, size,Direction.ASC,"preco");

@@ -15,6 +15,8 @@ import br.com.felipeDuarte.domain.Pessoa;
 @Repository
 public interface ImovelRepository extends JpaRepository<Imovel,Integer>{
 	
+	public List<Imovel> findByDisponivelAndProprietario(Boolean disponivel,Pessoa proprietario);
+	
 	public Page<Imovel> findByDisponivel(Boolean disponivel,Pageable pageable);
 	
 	public List<Imovel> findByProprietario(Pessoa proprietario);

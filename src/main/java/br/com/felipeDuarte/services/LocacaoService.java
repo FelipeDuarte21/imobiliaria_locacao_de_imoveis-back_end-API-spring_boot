@@ -174,4 +174,40 @@ public class LocacaoService {
 		return l.get();
 	}
 	
+	public Page<Locacao> findByNomeInquilino(String nome,Integer page,Integer size){
+		
+		PageRequest pageable = PageRequest.of(page, size,Direction.ASC,"data");
+		
+		Page<Locacao> locacoes;
+		
+		if(nome.isEmpty() || nome == null) {
+			
+			locacoes = this.findAll(page, size);
+			
+		}else {
+		
+			locacoes = this.locacaoRepository.findByNomeInquilino(nome,pageable);	
+		}
+		
+		return locacoes;
+	}
+	
+	public Page<Locacao> findByNomeProprietario(String nome,Integer page,Integer size){
+		
+		PageRequest pageable = PageRequest.of(page, size,Direction.ASC,"data");
+		
+		Page<Locacao> locacoes;
+		
+		if(nome.isEmpty() || nome == null) {
+			
+			locacoes = this.findAll(page, size);
+			
+		}else {
+		
+			locacoes = this.locacaoRepository.findByNomeProprietario(nome, pageable);	
+		}
+		
+		return locacoes;
+	}
+	
 }

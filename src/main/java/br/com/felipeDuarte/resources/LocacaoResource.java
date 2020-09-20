@@ -80,6 +80,38 @@ public class LocacaoResource {
 		return ResponseEntity.status(HttpStatus.OK).body(l);
 	}
 	
+	@GetMapping("/inquilino/{id}")
+	private ResponseEntity<Page<Locacao>> findByInquilino(@PathVariable Integer id,
+			@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = "6") Integer size){
+		
+		Page<Locacao> locacoes = locacaoService.findByInquilino(id,page,size);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(locacoes);
+	}
+	
+	@GetMapping("/inquilino/search")
+	private ResponseEntity<Page<Locacao>> findByNomeInquilino(@RequestParam(defaultValue = "") String nome,
+			@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = "6") Integer size){
+		
+		Page<Locacao> locacoes = this.locacaoService.findByNomeInquilino(nome, page, size);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(locacoes);
+		
+	}
+	
+	@GetMapping("/proprietario/search")
+	private ResponseEntity<Page<Locacao>> findByNomeProprietario(@RequestParam(defaultValue = "") String nome,
+			@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = "6") Integer size){
+		
+		Page<Locacao> locacoes = this.locacaoService.findByNomeProprietario(nome, page, size);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(locacoes);
+		
+	}
+	
 	@GetMapping
 	private ResponseEntity<Page<Locacao>> findAll(
 			@RequestParam(defaultValue = "0") Integer page,
@@ -90,14 +122,6 @@ public class LocacaoResource {
 		return ResponseEntity.status(HttpStatus.OK).body(locacoes);
 	}
 	
-	@GetMapping("/inquilino/{id}")
-	private ResponseEntity<Page<Locacao>> findByInquilino(@PathVariable Integer id,
-			@RequestParam(defaultValue = "0") Integer page,
-			@RequestParam(defaultValue = "6") Integer size){
-		
-		Page<Locacao> locacoes = locacaoService.findByInquilino(id,page,size);
-		
-		return ResponseEntity.status(HttpStatus.OK).body(locacoes);
-	}
+	
 	 
 }

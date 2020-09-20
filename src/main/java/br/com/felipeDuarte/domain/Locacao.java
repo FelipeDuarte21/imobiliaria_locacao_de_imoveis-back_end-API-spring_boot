@@ -37,7 +37,7 @@ public class Locacao implements Serializable{
 	private Integer idLocacao;
 	
 	@NotNull(message = "Informe a data da locação")
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	private Date data;
 	
@@ -47,12 +47,12 @@ public class Locacao implements Serializable{
 	private String tempo;
 	
 	@NotNull(message = "Informe a data de início da locação")
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	private Date dataInicio;
 	
 	@NotNull(message = "Informe o data de término da locação")
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	private Date dataTermino;
 	
