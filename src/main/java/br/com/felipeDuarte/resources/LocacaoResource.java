@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.felipeDuarte.domain.Locacao;
+import br.com.felipeDuarte.domain.dto.LocacaoDTO;
 import br.com.felipeDuarte.resources.exception.ObjectBadRequestException;
 import br.com.felipeDuarte.resources.exception.ObjectNotFoundException;
 import br.com.felipeDuarte.services.LocacaoService;
@@ -31,25 +32,40 @@ public class LocacaoResource {
 	private LocacaoService locacaoService;
 	
 	@PostMapping
-	private ResponseEntity<Locacao> save(@Valid @RequestBody Locacao locacao) {
+	private ResponseEntity<Locacao> save(@Valid @RequestBody LocacaoDTO locacao) {
 		
 		Locacao l = locacaoService.save(locacao);
 		
 		if(l == null) {
 			throw new ObjectBadRequestException("Imóvel já alugado!");
-		}else {
-			return ResponseEntity.status(HttpStatus.CREATED).body(l);
 		}
 		
+		if(l.getImovel() == null) {
+			throw new ObjectNotFoundException("Imóvel Não Encontrado!");
+		}
+		
+		if(l.getInquilino() == null) {
+			throw new ObjectNotFoundException("Inquilino Não Encontrado!");
+		}
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(l);
 	}
 	
 	@PutMapping
-	private ResponseEntity<Locacao> update(@Valid @RequestBody Locacao locacao){
+	private ResponseEntity<Locacao> update(@Valid @RequestBody LocacaoDTO locacao){
 		
 		Locacao l = locacaoService.update(locacao);
 		
 		if(l == null) {
 			throw new ObjectBadRequestException("Falha ao tentar atualizar!");
+		}
+		
+		if(l.getImovel() == null) {
+			throw new ObjectNotFoundException("Imóvel Não Encontrado!");
+		}
+		
+		if(l.getInquilino() == null) {
+			throw new ObjectNotFoundException("Inquilino Não Encontrado!");
 		}
 		
 		return ResponseEntity.status(HttpStatus.OK).body(l);

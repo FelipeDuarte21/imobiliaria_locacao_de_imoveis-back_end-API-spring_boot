@@ -28,10 +28,18 @@ public class AluguelService {
 		return aluguelRepository.saveAll(alugueis);
 	}
 	
-	public Aluguel recordPayment(Aluguel aluguel){
+	public Aluguel recordPayment(Integer idAluguel){
 		
 		try {
-		
+			
+			Aluguel aluguel = this.findById(idAluguel);
+			
+			if(aluguel == null) {
+				Aluguel a = new Aluguel();
+				a.setQuite(false);
+				return a;
+			}
+			
 			aluguel.setQuite(true);
 			
 			Calendar data = Calendar.getInstance();

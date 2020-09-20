@@ -138,7 +138,7 @@ public class Locacao implements Serializable{
 		return inquilino;
 	}
 
-	public void setPessoa(Pessoa inquilino) {
+	public void setInquilino(Pessoa inquilino) {
 		this.inquilino = inquilino;
 	}
 

@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import br.com.felipeDuarte.domain.Aluguel;
 import br.com.felipeDuarte.domain.Imovel;
 import br.com.felipeDuarte.domain.Locacao;
+import br.com.felipeDuarte.domain.Pessoa;
+import br.com.felipeDuarte.domain.dto.LocacaoDTO;
 import br.com.felipeDuarte.repositories.LocacaoRepository;
 
 @Service
@@ -31,7 +33,41 @@ public class LocacaoService {
 	@Autowired
 	private PessoaService pessoaService;
 	
-	public Locacao save(Locacao locacao) {
+	
+	private Locacao converteLocacaoDTO(LocacaoDTO locacaoDTO) {
+		
+		Locacao locacao = new Locacao();
+		locacao.setIdLocacao(locacaoDTO.getIdLocacao());
+		locacao.setData(locacaoDTO.getData());
+		locacao.setDataInicio(locacaoDTO.getDataInicio());
+		locacao.setDataTermino(locacaoDTO.getDataTermino());
+		locacao.setTempo(locacaoDTO.getTempo());
+		locacao.setValor(locacaoDTO.getValor());
+		
+		Imovel i = this.imovelService.findById(locacaoDTO.getIdImovel());
+		if(i == null) {
+			locacao.setImovel(null);
+		}else {
+			locacao.setImovel(i);
+		}
+		
+		Pessoa p = this.pessoaService.findById(locacaoDTO.getIdInquilino());
+		if(p == null) {
+			locacao.setInquilino(null);
+		}else {
+			locacao.setInquilino(p);
+		}
+		
+		return locacao;
+	}
+	
+	public Locacao save(LocacaoDTO locacaoDTO) {
+		
+		Locacao locacao = this.converteLocacaoDTO(locacaoDTO);
+		
+		if(locacao.getImovel() == null || locacao.getInquilino() == null) {
+			return locacao;
+		}
 		
 		Optional<Locacao> l =  locacaoRepository.findByImovel(
 					imovelService.findById(locacao.getImovel().getIdImovel()));
@@ -76,12 +112,17 @@ public class LocacaoService {
 		return alugueis;
 	}
 	
-	public Locacao update(Locacao locacao) {
+	public Locacao update(LocacaoDTO locacaoDTO) {
 		
-		Locacao l = this.findById(locacao.getIdLocacao());
+		Locacao loc = this.converteLocacaoDTO(locacaoDTO);
+		if(loc.getImovel() == null || loc.getInquilino() == null) {
+			return loc;
+		}
+		
+		Locacao l = this.findById(loc.getIdLocacao());
 		
 		Calendar dataInicio = Calendar.getInstance();
-		dataInicio.setTime(locacao.getDataInicio());
+		dataInicio.setTime(loc.getDataInicio());
 		
 		for(int i = 1; i <= Integer.parseInt(l.getTempo()); i++) {
 			
@@ -95,12 +136,12 @@ public class LocacaoService {
 		aluguelService.saveAll(l.getAlugueis());
 		
 		try {
-			locacaoRepository.save(locacao);
+			locacaoRepository.save(loc);
 		}catch(RuntimeException ex) {
 			return null;
 		}
 		
-		return locacao;
+		return loc;
 	}
 	
 	public boolean delete(Integer id) {
