@@ -102,6 +102,19 @@ public class ImovelResource {
 		return ResponseEntity.status(HttpStatus.OK).body(imoveis);
 	}
 	
+	@GetMapping("/all")
+	private ResponseEntity<List<Imovel>> findAll(){
+		
+		List<Imovel> imoveis = this.imovelService.findAll();
+		
+		if(imoveis == null) {
+			throw new ObjectNotFoundException("Não Há Imóveis Cadastrados!");
+		}
+		
+		return ResponseEntity.status(HttpStatus.OK).body(imoveis);
+		
+	}
+	
 	@GetMapping("/disponivel")
 	private ResponseEntity<Page<Imovel>> findByDisponivel(
 			@RequestParam(defaultValue = "0") Integer page, 

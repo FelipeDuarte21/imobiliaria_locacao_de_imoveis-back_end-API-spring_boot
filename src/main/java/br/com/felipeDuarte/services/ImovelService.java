@@ -129,6 +129,17 @@ public class ImovelService {
 		return imoveis;
 	}
 	
+	public List<Imovel> findAll(){
+		
+		List<Imovel> imoveis = this.imovelRepository.findAll();
+		
+		if(imoveis.isEmpty()) {
+			return null;
+		}
+		
+		return imoveis;
+	}
+	
 	public List<Imovel> findByDisponivel(Integer id){
 		
 		List<Imovel> imoveis = this.imovelRepository.findByDisponivelAndProprietario(true,
