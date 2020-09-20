@@ -118,7 +118,7 @@ public class AluguelService {
 		Date hora = new Date();
 		
 		Page<Aluguel> alugueis = 
-				this.aluguelRepository.findByDataVencimentoLessThanOrderByDataVencimento(hora, pageable);
+				this.aluguelRepository.findByDataVencimentoLessThanAndQuiteOrderByDataVencimento(hora, false, pageable);
 		
 		return alugueis;
 	}

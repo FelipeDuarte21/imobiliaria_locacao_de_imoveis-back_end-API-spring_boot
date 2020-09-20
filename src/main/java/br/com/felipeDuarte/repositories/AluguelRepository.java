@@ -15,5 +15,5 @@ public interface AluguelRepository extends JpaRepository<Aluguel,Integer>{
 	
 	public Page<Aluguel> findByLocacao(Locacao locacao,Pageable pageable);
 	public Page<Aluguel> findByDataVencimentoBetweenOrderByDataVencimento(Date inicio,Date fim,Pageable pageable);
-	public Page<Aluguel> findByDataVencimentoLessThanOrderByDataVencimento(Date dataVencimento,Pageable pageable);
+	public Page<Aluguel> findByDataVencimentoLessThanAndQuiteOrderByDataVencimento(Date dataVencimento, Boolean quite, Pageable pageable);
 }
