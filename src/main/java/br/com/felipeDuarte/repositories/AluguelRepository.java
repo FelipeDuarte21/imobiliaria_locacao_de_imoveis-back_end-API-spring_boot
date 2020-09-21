@@ -1,6 +1,7 @@
 package br.com.felipeDuarte.repositories;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,4 +17,5 @@ public interface AluguelRepository extends JpaRepository<Aluguel,Integer>{
 	public Page<Aluguel> findByLocacao(Locacao locacao,Pageable pageable);
 	public Page<Aluguel> findByDataVencimentoBetweenOrderByDataVencimento(Date inicio,Date fim,Pageable pageable);
 	public Page<Aluguel> findByDataVencimentoLessThanAndQuiteOrderByDataVencimento(Date dataVencimento, Boolean quite, Pageable pageable);
+	public List<Aluguel> findByDataVencimentoLessThanAndQuiteOrderByDataVencimento(Date dataVencimento, Boolean quite);
 }

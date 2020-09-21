@@ -1,5 +1,7 @@
 package br.com.felipeDuarte.resources;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -91,6 +93,18 @@ public class AluguelResource {
 			@RequestParam(defaultValue = "6") Integer size){
 		
 		Page<Aluguel> alugueis = aluguelService.findAllAtrasados(page,size);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(alugueis);
+	}
+	
+	@GetMapping("/atrasados/all")
+	private ResponseEntity<List<Aluguel>> findAllAtrasados(){
+		
+		List<Aluguel> alugueis = this.aluguelService.findAllAtrasados();
+		
+		if(alugueis == null) {
+			throw new ObjectNotFoundException("Não Há Alugueis Cadastrados!");
+		}
 		
 		return ResponseEntity.status(HttpStatus.OK).body(alugueis);
 	}

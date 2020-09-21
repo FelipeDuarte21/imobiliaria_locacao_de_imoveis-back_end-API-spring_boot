@@ -123,4 +123,18 @@ public class AluguelService {
 		return alugueis;
 	}
 	
+	public List<Aluguel> findAllAtrasados(){
+		
+		Date hora = new Date();
+		
+		List<Aluguel> alugueis = this.aluguelRepository.findByDataVencimentoLessThanAndQuiteOrderByDataVencimento(hora, false);
+		
+		if(alugueis.isEmpty()) {
+			return null;
+		}
+		
+		return alugueis;
+	}
+	
+	
 }
