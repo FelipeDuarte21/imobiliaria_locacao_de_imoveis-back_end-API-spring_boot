@@ -1,7 +1,8 @@
 package br.com.luizfelipeduarte.imobiliariaapi.entidade.dto;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -10,15 +11,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class LocacaoDTO implements Serializable{
+public class LocacaoDadosDTO implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 
-	private Integer idLocacao;
+	private Long id;
 	
 	@NotNull(message = "Informe a data da locação")
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date data;
+	private LocalDate data;
 	
 	@NotNull(message = "Informe o tempo da locação")
 	@NotBlank(message = "Informe o tempo da locação")
@@ -27,38 +28,38 @@ public class LocacaoDTO implements Serializable{
 	
 	@NotNull(message = "Informe a data de início da locação")
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date dataInicio;
+	private LocalDate dataInicio;
 	
 	@NotNull(message = "Informe o data de término da locação")
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date dataTermino;
+	private LocalDate dataTermino;
 	
 	@NotNull(message = "Informe o valor da locação")
-	private Double valor;
+	private BigDecimal valor;
 	
 	@NotNull(message = "Informe o imóvel da locação")
-	private Integer idImovel;
+	private Long idImovel;
 	
 	@NotNull(message = "Informe o inquilino")
-	private Integer idInquilino;
+	private Long idInquilino;
 	
-	public LocacaoDTO() {
+	public LocacaoDadosDTO() {
 		
 	}
 
-	public Integer getIdLocacao() {
-		return idLocacao;
+	public Long getId() {
+		return id;
 	}
 
-	public void setIdLocacao(Integer idLocacao) {
-		this.idLocacao = idLocacao;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public Date getData() {
+	public LocalDate getData() {
 		return data;
 	}
 
-	public void setData(Date data) {
+	public void setData(LocalDate data) {
 		this.data = data;
 	}
 
@@ -70,44 +71,44 @@ public class LocacaoDTO implements Serializable{
 		this.tempo = tempo;
 	}
 
-	public Date getDataInicio() {
+	public LocalDate getDataInicio() {
 		return dataInicio;
 	}
 
-	public void setDataInicio(Date dataInicio) {
+	public void setDataInicio(LocalDate dataInicio) {
 		this.dataInicio = dataInicio;
 	}
 
-	public Date getDataTermino() {
+	public LocalDate getDataTermino() {
 		return dataTermino;
 	}
 
-	public void setDataTermino(Date dataTermino) {
+	public void setDataTermino(LocalDate dataTermino) {
 		this.dataTermino = dataTermino;
 	}
 
-	public Double getValor() {
+	public BigDecimal getValor() {
 		return valor;
 	}
 
-	public void setValor(Double valor) {
+	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
 
-	public Integer getIdImovel() {
+	public Long getIdImovel() {
 		return idImovel;
 	}
 
-	public void setIdImovel(Integer idImovel) {
+	public void setIdImovel(Long idImovel) {
 		this.idImovel = idImovel;
 	}
 
-	public Integer getIdInquilino() {
+	public Long getIdInquilino() {
 		return idInquilino;
 	}
 
-	public void setIdInquilino(Integer idInquilino) {
+	public void setIdInquilino(Long idInquilino) {
 		this.idInquilino = idInquilino;
 	}
-	
+
 }

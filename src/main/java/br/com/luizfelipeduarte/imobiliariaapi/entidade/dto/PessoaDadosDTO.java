@@ -1,21 +1,20 @@
 package br.com.luizfelipeduarte.imobiliariaapi.entidade.dto;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class PessoaDTO {
+public class PessoaDadosDTO {
 	
-	private Integer idPessoa;
+	private Long id;
 	
 	@NotNull(message = "Informe o tipo da pessoa")
 	private Integer tipoPessoa;
@@ -35,7 +34,7 @@ public class PessoaDTO {
 	
 	@NotNull(message = "Informe a data de nascimento")
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date dataNascimento;
+	private LocalDate dataNascimento;
 	
 	@NotNull(message = "Informe o número da identidade")
 	@NotBlank(message = "Informe o número da identidade")
@@ -49,8 +48,7 @@ public class PessoaDTO {
 	
 	@NotNull(message = "Informe uma data de expedição")
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	@Temporal(TemporalType.DATE)
-	private Date dataExpedicao;
+	private LocalDate dataExpedicao;
 	
 	@NotNull(message = "Informe um cpf")
 	@NotBlank(message = "Informe um cpf")
@@ -60,24 +58,24 @@ public class PessoaDTO {
 	@Length(max=50,message = "Informe um email de até {max} caracteres")
 	private String email;
 	
-	private Double salario;
+	private BigDecimal salario;
 
 	@NotNull(message = "Informe um contato")
-	private List<ContatoDTO> contatos = new ArrayList<>();
+	private List<ContatoDadosDTO> contatos = new ArrayList<>();
 	
 	@NotNull(message = "Informe um endereço")
-	private EnderecoDTO endereco;
+	private EnderecoDadosDTO endereco;
 	
-	public PessoaDTO() {
+	public PessoaDadosDTO() {
 		
 	}
 
-	public Integer getIdPessoa() {
-		return idPessoa;
+	public Long getId() {
+		return id;
 	}
 
-	public void setIdPessoa(Integer idPessoa) {
-		this.idPessoa = idPessoa;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Integer getTipoPessoa() {
@@ -112,11 +110,11 @@ public class PessoaDTO {
 		this.estadoCivil = estadoCivil;
 	}
 
-	public Date getDataNascimento() {
+	public LocalDate getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(Date dataNascimento) {
+	public void setDataNascimento(LocalDate dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 
@@ -136,11 +134,11 @@ public class PessoaDTO {
 		this.orgaoEmissor = orgaoEmissor;
 	}
 
-	public Date getDataExpedicao() {
+	public LocalDate getDataExpedicao() {
 		return dataExpedicao;
 	}
 
-	public void setDataExpedicao(Date dataExpedicao) {
+	public void setDataExpedicao(LocalDate dataExpedicao) {
 		this.dataExpedicao = dataExpedicao;
 	}
 
@@ -160,28 +158,28 @@ public class PessoaDTO {
 		this.email = email;
 	}
 
-	public Double getSalario() {
+	public BigDecimal getSalario() {
 		return salario;
 	}
 
-	public void setSalario(Double salario) {
+	public void setSalario(BigDecimal salario) {
 		this.salario = salario;
 	}
 
-	public List<ContatoDTO> getContatos() {
+	public List<ContatoDadosDTO> getContatos() {
 		return contatos;
 	}
 
-	public void setContatos(List<ContatoDTO> contatos) {
+	public void setContatos(List<ContatoDadosDTO> contatos) {
 		this.contatos = contatos;
 	}
 
-	public EnderecoDTO getEndereco() {
+	public EnderecoDadosDTO getEndereco() {
 		return endereco;
 	}
 
-	public void setEndereco(EnderecoDTO endereco) {
+	public void setEndereco(EnderecoDadosDTO endereco) {
 		this.endereco = endereco;
 	}
-	
+
 }

@@ -10,7 +10,7 @@ import br.com.luizfelipeduarte.imobiliariaapi.entidade.Endereco;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Estado;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.LogradouroCep;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Numero;
-import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.EnderecoDTO;
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.EnderecoDadosDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.repositories.BairroRepository;
 import br.com.luizfelipeduarte.imobiliariaapi.repositories.CidadeRepository;
 import br.com.luizfelipeduarte.imobiliariaapi.repositories.ComplementoRepository;
@@ -114,7 +114,7 @@ public class EnderecoService {
 		return endereco;
 	}
 	
-	public Endereco estruturaEndereco(EnderecoDTO enderecoDTO) {
+	public Endereco estruturaEndereco(EnderecoDadosDTO enderecoDTO) {
 		
 		Endereco e = new Endereco();
 		e.setLogradouroCep(new LogradouroCep());

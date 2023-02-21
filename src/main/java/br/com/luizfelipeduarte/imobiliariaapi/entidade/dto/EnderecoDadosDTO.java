@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.Length;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class EnderecoDTO implements Serializable{
+public class EnderecoDadosDTO implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -43,7 +43,7 @@ public class EnderecoDTO implements Serializable{
 	@Length(max = 8, message = "Somente até {8} caracteres")
 	private String cep;
 	
-	public EnderecoDTO() {
+	public EnderecoDadosDTO() {
 		
 	}
 	

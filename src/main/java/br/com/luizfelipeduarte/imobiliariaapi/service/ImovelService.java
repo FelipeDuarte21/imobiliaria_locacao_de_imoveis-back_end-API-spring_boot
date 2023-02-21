@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Imovel;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Pessoa;
-import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.ImovelDTO;
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.ImovelDadosDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.repositories.ImovelRepository;
 
 @Service
@@ -29,7 +29,7 @@ public class ImovelService {
 	@Autowired
 	private LocacaoService locacaoService;
 	
-	private Imovel converteImovelDTO(ImovelDTO imovelDTO) {
+	private Imovel converteImovelDTO(ImovelDadosDTO imovelDTO) {
 		
 		//Dados Gerais
 		Imovel i = new Imovel();
@@ -53,7 +53,7 @@ public class ImovelService {
 		return i;
 	}
 	
-	public Imovel save(ImovelDTO imovelDTO) {
+	public Imovel save(ImovelDadosDTO imovelDTO) {
 		
 		Imovel imovel = this.converteImovelDTO(imovelDTO);
 		
@@ -72,7 +72,7 @@ public class ImovelService {
 		return imovel;
 	}
 	
-	public Imovel update(ImovelDTO imovelDTO) {
+	public Imovel update(ImovelDadosDTO imovelDTO) {
 		
 		Imovel imovel = this.converteImovelDTO(imovelDTO);
 		if(imovel.getProprietario() == null) {

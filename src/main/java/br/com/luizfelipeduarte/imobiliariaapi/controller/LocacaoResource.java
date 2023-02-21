@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.luizfelipeduarte.imobiliariaapi.controller.exception.ObjectBadRequestException;
 import br.com.luizfelipeduarte.imobiliariaapi.controller.exception.ObjectNotFoundException;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Locacao;
-import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.LocacaoDTO;
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.LocacaoDadosDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.service.LocacaoService;
 import jakarta.validation.Valid;
 
@@ -33,7 +33,7 @@ public class LocacaoResource {
 	private LocacaoService locacaoService;
 	
 	@PostMapping
-	private ResponseEntity<Locacao> save(@Valid @RequestBody LocacaoDTO locacao) {
+	private ResponseEntity<Locacao> save(@Valid @RequestBody LocacaoDadosDTO locacao) {
 		
 		Locacao l = locacaoService.save(locacao);
 		
@@ -53,7 +53,7 @@ public class LocacaoResource {
 	}
 	
 	@PutMapping
-	private ResponseEntity<Locacao> update(@Valid @RequestBody LocacaoDTO locacao){
+	private ResponseEntity<Locacao> update(@Valid @RequestBody LocacaoDadosDTO locacao){
 		
 		Locacao l = locacaoService.update(locacao);
 		

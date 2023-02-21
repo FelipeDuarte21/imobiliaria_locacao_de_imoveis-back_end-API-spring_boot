@@ -1,20 +1,21 @@
 package br.com.luizfelipeduarte.imobiliariaapi.entidade.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import org.hibernate.validator.constraints.Length;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class ImovelDTO implements Serializable {
+public class ImovelDadosDTO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	private Integer idImovel;
+	private Long id;
 	
 	@NotNull(message = "Informe o preço do aluguel do imóvel")
-	private Double preco;
+	private BigDecimal preco;
 	
 	@NotNull(message = "Informe o tipo do imóvel(ex: Casa, Apartamento etc..)")
 	@NotBlank(message = "Informe o tipo do imóvel(ex: Casa, Apartamento etc..)")
@@ -26,28 +27,28 @@ public class ImovelDTO implements Serializable {
 	private String descricao;
 	
 	@NotNull(message = "Informe o endereço do imóvel")
-	private EnderecoDTO endereco;
+	private EnderecoDadosDTO endereco;
 	
 	@NotNull(message = "Informe o proprietário")
-	private Integer idProprietario;
+	private Long idProprietario;
 	
-	public ImovelDTO() {
+	public ImovelDadosDTO() {
 		
 	}
 
-	public Integer getIdImovel() {
-		return idImovel;
+	public Long getId() {
+		return id;
 	}
 
-	public void setIdImovel(Integer idImovel) {
-		this.idImovel = idImovel;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public Double getPreco() {
+	public BigDecimal getPreco() {
 		return preco;
 	}
 
-	public void setPreco(Double preco) {
+	public void setPreco(BigDecimal preco) {
 		this.preco = preco;
 	}
 
@@ -67,19 +68,19 @@ public class ImovelDTO implements Serializable {
 		this.descricao = descricao;
 	}
 
-	public EnderecoDTO getEndereco() {
+	public EnderecoDadosDTO getEndereco() {
 		return endereco;
 	}
 
-	public void setEndereco(EnderecoDTO endereco) {
+	public void setEndereco(EnderecoDadosDTO endereco) {
 		this.endereco = endereco;
 	}
 
-	public Integer getIdProprietario() {
+	public Long getIdProprietario() {
 		return idProprietario;
 	}
 
-	public void setIdProprietario(Integer idProprietario) {
+	public void setIdProprietario(Long idProprietario) {
 		this.idProprietario = idProprietario;
 	}
 	

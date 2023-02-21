@@ -15,7 +15,7 @@ import br.com.luizfelipeduarte.imobiliariaapi.entidade.Aluguel;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Imovel;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Locacao;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Pessoa;
-import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.LocacaoDTO;
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.LocacaoDadosDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.repositories.LocacaoRepository;
 
 @Service
@@ -34,7 +34,7 @@ public class LocacaoService {
 	private PessoaService pessoaService;
 	
 	
-	private Locacao converteLocacaoDTO(LocacaoDTO locacaoDTO) {
+	private Locacao converteLocacaoDTO(LocacaoDadosDTO locacaoDTO) {
 		
 		Locacao locacao = new Locacao();
 		locacao.setIdLocacao(locacaoDTO.getIdLocacao());
@@ -61,7 +61,7 @@ public class LocacaoService {
 		return locacao;
 	}
 	
-	public Locacao save(LocacaoDTO locacaoDTO) {
+	public Locacao save(LocacaoDadosDTO locacaoDTO) {
 		
 		Locacao locacao = this.converteLocacaoDTO(locacaoDTO);
 		
@@ -112,7 +112,7 @@ public class LocacaoService {
 		return alugueis;
 	}
 	
-	public Locacao update(LocacaoDTO locacaoDTO) {
+	public Locacao update(LocacaoDadosDTO locacaoDTO) {
 		
 		Locacao loc = this.converteLocacaoDTO(locacaoDTO);
 		if(loc.getImovel() == null || loc.getInquilino() == null) {

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.luizfelipeduarte.imobiliariaapi.controller.exception.ObjectBadRequestException;
 import br.com.luizfelipeduarte.imobiliariaapi.controller.exception.ObjectNotFoundException;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Imovel;
-import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.ImovelDTO;
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.ImovelDadosDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.service.ImovelService;
 import jakarta.validation.Valid;
 
@@ -34,7 +34,7 @@ public class ImovelResource {
 	
 	
 	@PostMapping
-	private ResponseEntity<Imovel> save(@Valid @RequestBody ImovelDTO imovel){
+	private ResponseEntity<Imovel> save(@Valid @RequestBody ImovelDadosDTO imovel){
 		
 		Imovel i = imovelService.save(imovel);
 		
@@ -51,7 +51,7 @@ public class ImovelResource {
 	}
 	
 	@PutMapping
-	private ResponseEntity<Imovel> update(@Valid @RequestBody ImovelDTO imovel){
+	private ResponseEntity<Imovel> update(@Valid @RequestBody ImovelDadosDTO imovel){
 		
 		Imovel i = imovelService.update(imovel);
 		

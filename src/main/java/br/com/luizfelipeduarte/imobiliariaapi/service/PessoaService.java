@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Contato;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Pessoa;
-import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.PessoaDTO;
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.PessoaDadosDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.enums.TipoPessoa;
 import br.com.luizfelipeduarte.imobiliariaapi.repositories.ContatoRepository;
 import br.com.luizfelipeduarte.imobiliariaapi.repositories.PessoaRepository;
@@ -101,7 +101,7 @@ public class PessoaService {
 		return pessoa;
 	}
 	
-	private Pessoa convertePessoaDTO(PessoaDTO pessoaDTO) {
+	private Pessoa convertePessoaDTO(PessoaDadosDTO pessoaDTO) {
 		
 		//Dados Pessoais
 		Pessoa pessoa = new Pessoa();
@@ -135,11 +135,11 @@ public class PessoaService {
 		return pessoa;
 	}
 	
-	public Pessoa save(PessoaDTO pessoaDTO) {
+	public Pessoa save(PessoaDadosDTO pessoaDTO) {
 		return this.logicaSaveUpdate(this.convertePessoaDTO(pessoaDTO), true);
 	}
 	
-	public Pessoa update(PessoaDTO pessoa) {
+	public Pessoa update(PessoaDadosDTO pessoa) {
 		return this.logicaSaveUpdate(this.convertePessoaDTO(pessoa), false);
 	}
 	
