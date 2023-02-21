@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Contato;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Pessoa;
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.PessoaDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.PessoaDadosDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.enums.TipoPessoa;
 import br.com.luizfelipeduarte.imobiliariaapi.repositories.ContatoRepository;
@@ -39,6 +40,7 @@ public class PessoaService {
 	}
 	
 	public Pessoa findByCpf(String cpf) {
+		
 		 Optional<Pessoa> p = pessoaRepository.findByCpf(cpf);
 		 
 		 if(!p.isPresent()) {

@@ -26,7 +26,7 @@ import jakarta.validation.Valid;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/imovel")
+@RequestMapping("/api/v1/imovel")
 public class ImovelResource {
 	
 	@Autowired

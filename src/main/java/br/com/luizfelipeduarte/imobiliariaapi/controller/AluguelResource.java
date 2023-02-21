@@ -21,7 +21,7 @@ import br.com.luizfelipeduarte.imobiliariaapi.service.AluguelService;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/aluguel")
+@RequestMapping("/api/v1/aluguel")
 public class AluguelResource {
 
 	@Autowired
