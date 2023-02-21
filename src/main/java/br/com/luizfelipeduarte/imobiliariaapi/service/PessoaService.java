@@ -21,21 +21,22 @@ import br.com.luizfelipeduarte.imobiliariaapi.repositories.PessoaRepository;
 @Service
 public class PessoaService {
 	
-	@Autowired
 	private PessoaRepository pessoaRepository;
-	
-	@Autowired
 	private ContatoRepository contatoRepository;
 	
-	@Autowired
 	private EnderecoService enderecoService;
-	
-	@Autowired
 	private ImovelService imovelService;
-	
-	@Autowired
 	private LocacaoService locacaoService;
 	
+	@Autowired
+	public PessoaService(PessoaRepository pessoaRepository, ContatoRepository contatoRepository, 
+			EnderecoService enderecoService, ImovelService imovelService, LocacaoService locacaoService ) {
+		this.pessoaRepository = pessoaRepository;
+		this.contatoRepository = contatoRepository;
+		this.enderecoService = enderecoService;
+		this.imovelService = imovelService;
+		this.locacaoService = locacaoService;
+	}
 	
 	public Pessoa findByCpf(String cpf) {
 		 Optional<Pessoa> p = pessoaRepository.findByCpf(cpf);
