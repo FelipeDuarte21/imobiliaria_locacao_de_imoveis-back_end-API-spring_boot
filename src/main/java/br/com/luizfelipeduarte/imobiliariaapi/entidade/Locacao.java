@@ -1,14 +1,12 @@
 package br.com.luizfelipeduarte.imobiliariaapi.entidade;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,8 +16,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "locacao")
@@ -29,25 +25,17 @@ public class Locacao implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer idLocacao;
+	private Long id;
 	
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	@Temporal(TemporalType.DATE)
-	private Date data;
+	private LocalDate data;
 	
 	private String tempo;
 
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	@Temporal(TemporalType.DATE)
-	private Date dataInicio;
+	private LocalDate dataInicio;
 	
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	@Temporal(TemporalType.DATE)
-	private Date dataTermino;
+	private LocalDate dataTermino;
 	
-	@Column(precision = 2)
-	private Double valor;
+	private BigDecimal valor;
 	
 	@OneToOne
 	@JoinColumn(name = "id_Imovel")
@@ -57,7 +45,6 @@ public class Locacao implements Serializable{
 	@JoinColumn(name = "id_Inquilino")
 	private Pessoa inquilino;
 	
-	@JsonIgnore
 	@OneToMany(mappedBy = "locacao")
 	private List<Aluguel> alugueis = new ArrayList<>();
 	
@@ -65,32 +52,19 @@ public class Locacao implements Serializable{
 		
 	}
 
-	public Locacao(Integer idLocacao,String tempo, Date data, Date dataInicio, Date dataTermino, 
-	Double valor,Imovel imovel,Pessoa inquilino) {
-		super();
-		this.idLocacao = idLocacao;
-		this.data = data;
-		this.tempo = tempo;
-		this.dataInicio = dataInicio;
-		this.dataTermino = dataTermino;
-		this.valor = valor;
-		this.imovel = imovel;
-		this.inquilino = inquilino;
+	public Long getId() {
+		return id;
 	}
 
-	public Integer getIdLocacao() {
-		return idLocacao;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public void setIdLocacao(Integer idLocacao) {
-		this.idLocacao = idLocacao;
-	}
-
-	public Date getData() {
+	public LocalDate getData() {
 		return data;
 	}
 
-	public void setData(Date data) {
+	public void setData(LocalDate data) {
 		this.data = data;
 	}
 
@@ -102,27 +76,27 @@ public class Locacao implements Serializable{
 		this.tempo = tempo;
 	}
 
-	public Date getDataInicio() {
+	public LocalDate getDataInicio() {
 		return dataInicio;
 	}
 
-	public void setDataInicio(Date dataInicio) {
+	public void setDataInicio(LocalDate dataInicio) {
 		this.dataInicio = dataInicio;
 	}
 
-	public Date getDataTermino() {
+	public LocalDate getDataTermino() {
 		return dataTermino;
 	}
 
-	public void setDataTermino(Date dataTermino) {
+	public void setDataTermino(LocalDate dataTermino) {
 		this.dataTermino = dataTermino;
 	}
 
-	public Double getValor() {
+	public BigDecimal getValor() {
 		return valor;
 	}
 
-	public void setValor(Double valor) {
+	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
 
@@ -152,10 +126,7 @@ public class Locacao implements Serializable{
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((idLocacao == null) ? 0 : idLocacao.hashCode());
-		return result;
+		return Objects.hash(data, dataInicio, dataTermino, id, tempo, valor);
 	}
 
 	@Override
@@ -167,12 +138,11 @@ public class Locacao implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Locacao other = (Locacao) obj;
-		if (idLocacao == null) {
-			if (other.idLocacao != null)
-				return false;
-		} else if (!idLocacao.equals(other.idLocacao))
-			return false;
-		return true;
+		return Objects.equals(data, other.data) && Objects.equals(dataInicio, other.dataInicio)
+				&& Objects.equals(dataTermino, other.dataTermino) && Objects.equals(id, other.id)
+				&& Objects.equals(tempo, other.tempo) && Objects.equals(valor, other.valor);
 	}
 	
+	
+
 }

@@ -3,10 +3,8 @@ package br.com.luizfelipeduarte.imobiliariaapi.entidade;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,8 +22,7 @@ public class Bairro implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer idBairro;
+	private Long id;
 	
 	private String nome;
 	
@@ -33,26 +30,19 @@ public class Bairro implements Serializable{
 	@JoinColumn(name = "id_Cidade")
 	private Cidade cidade;
 	
-	@JsonIgnore
 	@OneToMany(mappedBy = "bairro")
 	private List<LogradouroCep> logradourosCeps = new ArrayList<>();
 	
 	public Bairro() {
 		
 	}
-	
-	public Bairro(Integer idBairro, String nome, Cidade cidade) {
-		this.idBairro = idBairro;
-		this.nome = nome;
-		this.cidade = cidade;
+
+	public Long getId() {
+		return id;
 	}
 
-	public Integer getIdBairro() {
-		return idBairro;
-	}
-
-	public void setIdBairro(Integer idBairro) {
-		this.idBairro = idBairro;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getNome() {
@@ -81,10 +71,7 @@ public class Bairro implements Serializable{
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((idBairro == null) ? 0 : idBairro.hashCode());
-		return result;
+		return Objects.hash(cidade, id, logradourosCeps, nome);
 	}
 
 	@Override
@@ -96,12 +83,8 @@ public class Bairro implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Bairro other = (Bairro) obj;
-		if (idBairro == null) {
-			if (other.idBairro != null)
-				return false;
-		} else if (!idBairro.equals(other.idBairro))
-			return false;
-		return true;
+		return Objects.equals(cidade, other.cidade) && Objects.equals(id, other.id)
+				&& Objects.equals(logradourosCeps, other.logradourosCeps) && Objects.equals(nome, other.nome);
 	}
 	
 }

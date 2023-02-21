@@ -3,10 +3,8 @@ package br.com.luizfelipeduarte.imobiliariaapi.entidade;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,12 +20,10 @@ public class Complemento implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer idComplemento;
+	private Long id;
 	
 	private String complemento;
 	
-	@JsonIgnore
 	@OneToMany(mappedBy = "complemento")
 	private List<LogradouroCep> logradourosCeps = new ArrayList<>();
 	
@@ -35,18 +31,12 @@ public class Complemento implements Serializable{
 		
 	}
 
-	public Complemento(Integer idComplemento, String complemento) {
-		super();
-		this.idComplemento = idComplemento;
-		this.complemento = complemento;
+	public Long getId() {
+		return id;
 	}
 
-	public Integer getIdComplemento() {
-		return idComplemento;
-	}
-
-	public void setIdComplemento(Integer idComplemento) {
-		this.idComplemento = idComplemento;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getComplemento() {
@@ -67,10 +57,7 @@ public class Complemento implements Serializable{
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((idComplemento == null) ? 0 : idComplemento.hashCode());
-		return result;
+		return Objects.hash(complemento, id, logradourosCeps);
 	}
 
 	@Override
@@ -82,12 +69,8 @@ public class Complemento implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Complemento other = (Complemento) obj;
-		if (idComplemento == null) {
-			if (other.idComplemento != null)
-				return false;
-		} else if (!idComplemento.equals(other.idComplemento))
-			return false;
-		return true;
+		return Objects.equals(complemento, other.complemento) && Objects.equals(id, other.id)
+				&& Objects.equals(logradourosCeps, other.logradourosCeps);
 	}
-
+	
 }

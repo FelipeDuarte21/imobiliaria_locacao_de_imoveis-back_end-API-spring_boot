@@ -3,10 +3,10 @@ package br.com.luizfelipeduarte.imobiliariaapi.entidade;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,8 +24,7 @@ public class Cidade implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer idCidade;
+	private Long id;
 	
 	private String nome;
 	
@@ -40,19 +39,13 @@ public class Cidade implements Serializable{
 	public Cidade() {
 		
 	}
-	
-	public Cidade(Integer idCidade, String nome, Estado estado) {
-		this.idCidade = idCidade;
-		this.nome = nome;
-		this.estado = estado;
+
+	public Long getId() {
+		return id;
 	}
 
-	public Integer getIdCidade() {
-		return idCidade;
-	}
-
-	public void setIdCidade(Integer idCidade) {
-		this.idCidade = idCidade;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getNome() {
@@ -81,10 +74,7 @@ public class Cidade implements Serializable{
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((idCidade == null) ? 0 : idCidade.hashCode());
-		return result;
+		return Objects.hash(bairros, estado, id, nome);
 	}
 
 	@Override
@@ -96,12 +86,8 @@ public class Cidade implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Cidade other = (Cidade) obj;
-		if (idCidade == null) {
-			if (other.idCidade != null)
-				return false;
-		} else if (!idCidade.equals(other.idCidade))
-			return false;
-		return true;
+		return Objects.equals(bairros, other.bairros) && Objects.equals(estado, other.estado)
+				&& Objects.equals(id, other.id) && Objects.equals(nome, other.nome);
 	}
 	
 }

@@ -1,18 +1,18 @@
 package br.com.luizfelipeduarte.imobiliariaapi.entidade;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.Objects;
 
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.enums.TipoEstadoCivil;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.enums.TipoPessoa;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,9 +20,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "pessoa")
@@ -32,93 +29,63 @@ public class Pessoa implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer idPessoa;
+	private Long id;
 	
-	@Column(name = "tipo")
-	private Integer tipoPessoa;
+	@Enumerated(EnumType.ORDINAL)
+	private TipoPessoa tipoPessoa;
 	
 	private String nome;
 	private String nacionalidade;
-	private Integer estadoCivil;
 	
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	@Temporal(TemporalType.DATE)
-	private Date dataNascimento;
+	@Enumerated(EnumType.STRING)
+	private TipoEstadoCivil estadoCivil;
+	
+	private LocalDate dataNascimento;
 	
 	private String identidade;
 	private String orgaoEmissor;
 
-	@JsonFormat(pattern="dd/MM/yyyy")
-	@Temporal(TemporalType.DATE)
-	private Date dataExpedicao;
+	private LocalDate dataExpedicao;
 	
 	@Column(unique = true)
 	private String cpf;
 	
 	private String email;
 	
-	@Column(precision = 2)
-	private Double salario;
+	private BigDecimal salario;
 
 	@Column(columnDefinition = "boolean not null default '1'")
 	private Boolean ativo;
 	
-	@JsonManagedReference
 	@OneToMany(mappedBy = "pessoa")
 	private List<Contato> contatos = new ArrayList<>();
 	
-	@NotNull(message = "Informe um endereço")
 	@OneToOne
 	@JoinColumn(name = "id_Endereco")
 	private Endereco endereco;
 	
-	@JsonIgnore
 	@OneToMany(mappedBy = "proprietario")
 	private List<Imovel> imoveis = new ArrayList<>();
 	
-	@JsonIgnore
 	@OneToMany(mappedBy = "inquilino")
 	private List<Locacao> locacoes = new ArrayList<>();
 	
-	public Pessoa() {
-		
+	public Pessoa() {}
+
+	public Long getId() {
+		return id;
 	}
 
-	public Pessoa(Integer idPessoa, Integer tipoPessoa, String nome, String nacionalidade, Integer estadoCivil,
-	Date dataNascimento, String identidade, String orgaoEmissor, Date dataExpedicao, String cpf, String email,
-	Double salario,Boolean ativo,Endereco endereco) {
-		super();
-		this.idPessoa = idPessoa;
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public TipoPessoa getTipoPessoa() {
+		return tipoPessoa;
+	}
+
+	public void setTipoPessoa(TipoPessoa tipoPessoa) {
 		this.tipoPessoa = tipoPessoa;
-		this.nome = nome;
-		this.nacionalidade = nacionalidade;
-		this.estadoCivil = estadoCivil;
-		this.dataNascimento = dataNascimento;
-		this.identidade = identidade;
-		this.orgaoEmissor = orgaoEmissor;
-		this.dataExpedicao = dataExpedicao;
-		this.cpf = cpf;
-		this.email = email;
-		this.salario = salario;
-		this.ativo = ativo;
-		this.endereco = endereco;
-	}
-
-	public Integer getIdPessoa() {
-		return idPessoa;
-	}
-
-	public void setIdPessoa(Integer idPessoa) {
-		this.idPessoa = idPessoa;
-	}
-
-	public String getTipoPessoa() {
-		return TipoPessoa.toEnum(this.tipoPessoa).getDescricao();
-	}
-
-	public void setTipoPessoa(Integer tipoPessoa) {
-		this.tipoPessoa = TipoPessoa.toEnum(tipoPessoa).getCod();
 	}
 
 	public String getNome() {
@@ -137,19 +104,19 @@ public class Pessoa implements Serializable{
 		this.nacionalidade = nacionalidade;
 	}
 
-	public String getEstadoCivil() {
-		return TipoEstadoCivil.toEnum(this.estadoCivil).getDescricao();
+	public TipoEstadoCivil getEstadoCivil() {
+		return estadoCivil;
 	}
 
-	public void setEstadoCivil(Integer estadoCivil) {
-		this.estadoCivil = TipoEstadoCivil.toEnum(estadoCivil).getCod();
+	public void setEstadoCivil(TipoEstadoCivil estadoCivil) {
+		this.estadoCivil = estadoCivil;
 	}
 
-	public Date getDataNascimento() {
+	public LocalDate getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(Date dataNascimento) {
+	public void setDataNascimento(LocalDate dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 
@@ -169,11 +136,11 @@ public class Pessoa implements Serializable{
 		this.orgaoEmissor = orgaoEmissor;
 	}
 
-	public Date getDataExpedicao() {
+	public LocalDate getDataExpedicao() {
 		return dataExpedicao;
 	}
 
-	public void setDataExpedicao(Date dataExpedicao) {
+	public void setDataExpedicao(LocalDate dataExpedicao) {
 		this.dataExpedicao = dataExpedicao;
 	}
 
@@ -193,11 +160,11 @@ public class Pessoa implements Serializable{
 		this.email = email;
 	}
 
-	public Double getSalario() {
+	public BigDecimal getSalario() {
 		return salario;
 	}
 
-	public void setSalario(Double salario) {
+	public void setSalario(BigDecimal salario) {
 		this.salario = salario;
 	}
 
@@ -243,10 +210,8 @@ public class Pessoa implements Serializable{
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((idPessoa == null) ? 0 : idPessoa.hashCode());
-		return result;
+		return Objects.hash(ativo, cpf, dataExpedicao, dataNascimento, email, estadoCivil, id, identidade,
+				nacionalidade, nome, orgaoEmissor, salario, tipoPessoa);
 	}
 
 	@Override
@@ -258,12 +223,13 @@ public class Pessoa implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Pessoa other = (Pessoa) obj;
-		if (idPessoa == null) {
-			if (other.idPessoa != null)
-				return false;
-		} else if (!idPessoa.equals(other.idPessoa))
-			return false;
-		return true;
+		return Objects.equals(ativo, other.ativo) && Objects.equals(cpf, other.cpf)
+				&& Objects.equals(dataExpedicao, other.dataExpedicao)
+				&& Objects.equals(dataNascimento, other.dataNascimento) && Objects.equals(email, other.email)
+				&& estadoCivil == other.estadoCivil && Objects.equals(id, other.id)
+				&& Objects.equals(identidade, other.identidade) && Objects.equals(nacionalidade, other.nacionalidade)
+				&& Objects.equals(nome, other.nome) && Objects.equals(orgaoEmissor, other.orgaoEmissor)
+				&& Objects.equals(salario, other.salario) && tipoPessoa == other.tipoPessoa;
 	}
-	
+
 }

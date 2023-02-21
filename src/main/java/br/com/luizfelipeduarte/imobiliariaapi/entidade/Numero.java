@@ -2,11 +2,9 @@ package br.com.luizfelipeduarte.imobiliariaapi.entidade;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,12 +20,10 @@ public class Numero implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer idNumero;
+	private Long id;
 	
 	private String numero;
 	
-	@JsonIgnore
 	@OneToMany(mappedBy = "numero")
 	private Set<Endereco> enderecos = new HashSet<>();
 	
@@ -35,18 +31,12 @@ public class Numero implements Serializable{
 		
 	}
 
-	public Numero(Integer idNumero, String numero) {
-		super();
-		this.idNumero = idNumero;
-		this.numero = numero;
+	public Long getId() {
+		return id;
 	}
 
-	public Integer getIdNumero() {
-		return idNumero;
-	}
-
-	public void setIdNumero(Integer idNumero) {
-		this.idNumero = idNumero;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getNumero() {
@@ -67,10 +57,7 @@ public class Numero implements Serializable{
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((idNumero == null) ? 0 : idNumero.hashCode());
-		return result;
+		return Objects.hash(enderecos, id, numero);
 	}
 
 	@Override
@@ -82,12 +69,10 @@ public class Numero implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Numero other = (Numero) obj;
-		if (idNumero == null) {
-			if (other.idNumero != null)
-				return false;
-		} else if (!idNumero.equals(other.idNumero))
-			return false;
-		return true;
+		return Objects.equals(enderecos, other.enderecos) && Objects.equals(id, other.id)
+				&& Objects.equals(numero, other.numero);
 	}
+
+	
 	
 }

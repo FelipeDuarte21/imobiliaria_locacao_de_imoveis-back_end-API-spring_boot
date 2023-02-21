@@ -1,8 +1,8 @@
 package br.com.luizfelipeduarte.imobiliariaapi.entidade;
 
 import java.io.Serializable;
+import java.util.Objects;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,8 +19,7 @@ public class Endereco implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer idEndereco;
+	private Long id;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_logradouroCep")
@@ -34,19 +33,12 @@ public class Endereco implements Serializable{
 		
 	}
 
-	public Endereco(Integer idEndereco, LogradouroCep logradouroCep, Numero numero) {
-		super();
-		this.idEndereco = idEndereco;
-		this.logradouroCep = logradouroCep;
-		this.numero = numero;
+	public Long getId() {
+		return id;
 	}
 
-	public Integer getIdEndereco() {
-		return idEndereco;
-	}
-
-	public void setIdEndereco(Integer idEndereco) {
-		this.idEndereco = idEndereco;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public LogradouroCep getLogradouroCep() {
@@ -67,10 +59,7 @@ public class Endereco implements Serializable{
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((idEndereco == null) ? 0 : idEndereco.hashCode());
-		return result;
+		return Objects.hash(id, logradouroCep, numero);
 	}
 
 	@Override
@@ -82,12 +71,10 @@ public class Endereco implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Endereco other = (Endereco) obj;
-		if (idEndereco == null) {
-			if (other.idEndereco != null)
-				return false;
-		} else if (!idEndereco.equals(other.idEndereco))
-			return false;
-		return true;
+		return Objects.equals(id, other.id) && Objects.equals(logradouroCep, other.logradouroCep)
+				&& Objects.equals(numero, other.numero);
 	}
 	
+	
+
 }

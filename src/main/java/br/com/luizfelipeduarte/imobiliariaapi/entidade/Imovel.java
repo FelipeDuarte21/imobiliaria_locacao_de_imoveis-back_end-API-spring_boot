@@ -1,6 +1,8 @@
 package br.com.luizfelipeduarte.imobiliariaapi.entidade;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,11 +22,9 @@ public class Imovel implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer idImovel;
+	private Long id;
 	
-	@Column(precision = 2)
-	private Double preco;
+	private BigDecimal preco;
 	
 	private String tipo;
 
@@ -46,31 +46,19 @@ public class Imovel implements Serializable{
 		
 	}
 
-	public Imovel(Integer idImovel, Double preco, String tipo, String descricao, Boolean disponivel,
-		Endereco endereco, Pessoa proprietario) {
-		super();
-		this.idImovel = idImovel;
-		this.preco = preco;
-		this.tipo = tipo;
-		this.descricao = descricao;
-		this.disponivel = disponivel;
-		this.endereco = endereco;
-		this.proprietario = proprietario;
+	public Long getId() {
+		return id;
 	}
 
-	public Integer getIdImovel() {
-		return idImovel;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public void setIdImovel(Integer idImovel) {
-		this.idImovel = idImovel;
-	}
-
-	public Double getPreco() {
+	public BigDecimal getPreco() {
 		return preco;
 	}
 
-	public void setPreco(Double preco) {
+	public void setPreco(BigDecimal preco) {
 		this.preco = preco;
 	}
 
@@ -116,10 +104,7 @@ public class Imovel implements Serializable{
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((idImovel == null) ? 0 : idImovel.hashCode());
-		return result;
+		return Objects.hash(descricao, disponivel, id, preco, tipo);
 	}
 
 	@Override
@@ -131,12 +116,11 @@ public class Imovel implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Imovel other = (Imovel) obj;
-		if (idImovel == null) {
-			if (other.idImovel != null)
-				return false;
-		} else if (!idImovel.equals(other.idImovel))
-			return false;
-		return true;
+		return Objects.equals(descricao, other.descricao) && Objects.equals(disponivel, other.disponivel)
+				&& Objects.equals(id, other.id) && Objects.equals(preco, other.preco)
+				&& Objects.equals(tipo, other.tipo);
 	}
+
+	
 	
 }
