@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.PessoaDadosDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.enums.TipoEstadoCivil;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.enums.TipoPessoa;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -57,20 +59,38 @@ public class Pessoa implements Serializable{
 	@Column(columnDefinition = "boolean not null default '1'")
 	private Boolean ativo;
 	
-	@OneToMany(mappedBy = "pessoa")
-	private List<Contato> contatos = new ArrayList<>();
-	
 	@OneToOne
 	@JoinColumn(name = "id_Endereco")
 	private Endereco endereco;
 	
-	@OneToMany(mappedBy = "proprietario")
+	@OneToMany(mappedBy = "pessoa", cascade = CascadeType.REMOVE)
+	private List<Contato> contatos = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "proprietario", cascade = CascadeType.REMOVE)
 	private List<Imovel> imoveis = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "inquilino")
+	@OneToMany(mappedBy = "inquilino", cascade = CascadeType.REMOVE)
 	private List<Locacao> locacoes = new ArrayList<>();
 	
 	public Pessoa() {}
+	
+	public Pessoa(PessoaDadosDTO pessoaDadosDTO) {
+		this.id = pessoaDadosDTO.getId();
+		this.tipoPessoa = TipoPessoa.toEnum(pessoaDadosDTO.getTipoPessoa());
+		this.nome = pessoaDadosDTO.getNome();
+		this.nacionalidade = pessoaDadosDTO.getNacionalidade();
+		this.estadoCivil = TipoEstadoCivil.toEnum(pessoaDadosDTO.getEstadoCivil());
+		this.dataNascimento = pessoaDadosDTO.getDataNascimento();
+		this.identidade = pessoaDadosDTO.getIdentidade();
+		this.orgaoEmissor = pessoaDadosDTO.getOrgaoEmissor();
+		this.dataExpedicao = pessoaDadosDTO.getDataExpedicao();
+		this.cpf = pessoaDadosDTO.getCpf();
+		this.email = pessoaDadosDTO.getEmail();
+		this.salario = pessoaDadosDTO.getSalario();
+		this.ativo = true;
+		this.endereco = new Endereco(pessoaDadosDTO.getEndereco());
+		this.contatos = pessoaDadosDTO.getContatos().stream().map(Contato::new).toList();
+	}
 
 	public Long getId() {
 		return id;

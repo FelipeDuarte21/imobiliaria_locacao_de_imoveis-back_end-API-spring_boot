@@ -44,6 +44,14 @@ public class LogradouroCep implements Serializable{
 	public LogradouroCep() {
 		
 	}
+	
+	public LogradouroCep(String logradouro,String cep, String complemento, 
+			String bairro, String cidade, String estado) {
+		this.logradouro = logradouro;
+		this.cep = cep;
+		this.complemento = new Complemento(complemento);
+		this.bairro = new Bairro(bairro,cidade,estado);
+	}
 
 	public Long getId() {
 		return id;

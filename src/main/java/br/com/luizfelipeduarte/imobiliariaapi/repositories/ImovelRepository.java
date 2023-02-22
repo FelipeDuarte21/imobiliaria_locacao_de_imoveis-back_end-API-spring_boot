@@ -13,7 +13,7 @@ import br.com.luizfelipeduarte.imobiliariaapi.entidade.Imovel;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Pessoa;
 
 @Repository
-public interface ImovelRepository extends JpaRepository<Imovel,Integer>{
+public interface ImovelRepository extends JpaRepository<Imovel,Long>{
 	
 	public List<Imovel> findByDisponivelAndProprietario(Boolean disponivel,Pessoa proprietario);
 	

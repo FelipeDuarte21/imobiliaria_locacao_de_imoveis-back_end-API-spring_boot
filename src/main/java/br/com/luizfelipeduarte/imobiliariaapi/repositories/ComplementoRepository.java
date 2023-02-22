@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Complemento;
 
 @Repository
-public interface ComplementoRepository extends JpaRepository<Complemento,Integer>{
+public interface ComplementoRepository extends JpaRepository<Complemento,Long>{
 
 	public Complemento findByComplemento(String complemento);	
 	

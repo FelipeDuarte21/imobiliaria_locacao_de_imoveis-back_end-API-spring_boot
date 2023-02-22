@@ -3,6 +3,7 @@ package br.com.luizfelipeduarte.imobiliariaapi.entidade;
 import java.io.Serializable;
 import java.util.Objects;
 
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.EnderecoDadosDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,6 +32,13 @@ public class Endereco implements Serializable{
 
 	public Endereco() {
 		
+	}
+	
+	public Endereco(EnderecoDadosDTO enderecoDadosDTO) {
+		this.numero = new Numero(enderecoDadosDTO.getNumero());
+		this.logradouroCep = new LogradouroCep(enderecoDadosDTO.getLogradouro(),enderecoDadosDTO.getCep(),
+				enderecoDadosDTO.getComplemento(),enderecoDadosDTO.getBairro(),enderecoDadosDTO.getCidade(),
+				enderecoDadosDTO.getEstado());
 	}
 
 	public Long getId() {

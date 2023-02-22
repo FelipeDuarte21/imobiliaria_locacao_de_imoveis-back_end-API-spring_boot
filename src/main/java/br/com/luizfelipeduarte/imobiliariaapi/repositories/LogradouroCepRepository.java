@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.LogradouroCep;
 
 @Repository
-public interface LogradouroCepRepository extends JpaRepository<LogradouroCep,Integer>{
+public interface LogradouroCepRepository extends JpaRepository<LogradouroCep,Long>{
 	
 	public LogradouroCep findByCep(String cep);
 	

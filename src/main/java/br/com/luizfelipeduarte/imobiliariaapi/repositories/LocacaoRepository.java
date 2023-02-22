@@ -14,7 +14,7 @@ import br.com.luizfelipeduarte.imobiliariaapi.entidade.Locacao;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Pessoa;
 
 @Repository
-public interface LocacaoRepository extends JpaRepository<Locacao,Integer>{
+public interface LocacaoRepository extends JpaRepository<Locacao,Long>{
 	
 	public Optional<Locacao> findByImovel(Imovel imovel);
 	public List<Locacao> findByInquilino(Pessoa id);

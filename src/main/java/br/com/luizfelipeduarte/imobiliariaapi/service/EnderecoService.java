@@ -10,6 +10,7 @@ import br.com.luizfelipeduarte.imobiliariaapi.entidade.Endereco;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Estado;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.LogradouroCep;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Numero;
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.EnderecoDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.EnderecoDadosDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.repositories.BairroRepository;
 import br.com.luizfelipeduarte.imobiliariaapi.repositories.CidadeRepository;
@@ -22,122 +23,91 @@ import br.com.luizfelipeduarte.imobiliariaapi.repositories.NumeroRepository;
 @Service
 public class EnderecoService {
 	
-	@Autowired
 	private EstadoRepository estadoRepository;
-	
-	@Autowired
 	private CidadeRepository cidadeRepository;
-	
-	@Autowired
 	private BairroRepository bairroRepository;
-	
-	@Autowired
 	private ComplementoRepository complementoRepository;
-	
-	@Autowired
 	private LogradouroCepRepository logradouroCepRepository;
-	
-	@Autowired
 	private NumeroRepository numeroRepository;
-	
-	@Autowired
 	private EnderecoRepository enderecoRepository;
 	
 	
-	public Endereco save(Endereco endereco) {
+	@Autowired
+	public EnderecoService(EstadoRepository estadoRepository, CidadeRepository cidadeRepository,
+			BairroRepository bairroRepository, ComplementoRepository complementoRepository,
+			LogradouroCepRepository logradouroCepRepository, NumeroRepository numeroRepository,
+			EnderecoRepository enderecoRepository) {
+		this.estadoRepository = estadoRepository;
+		this.cidadeRepository = cidadeRepository;
+		this.bairroRepository = bairroRepository;
+		this.complementoRepository = complementoRepository;
+		this.logradouroCepRepository = logradouroCepRepository;
+		this.numeroRepository = numeroRepository;
+		this.enderecoRepository = enderecoRepository;
+	}
+
+	public EnderecoDTO salvar(EnderecoDadosDTO enderecoDadosDTO) {
+		
+		Endereco endereco = new Endereco(enderecoDadosDTO);
 		
 		Estado estado = estadoRepository.findByNome(
 				endereco.getLogradouroCep().getBairro().getCidade().getEstado().getNome());
 		if(estado == null) {
-			estadoRepository.save(
-					endereco.getLogradouroCep().getBairro().getCidade().getEstado());
-		}else {
-			endereco.getLogradouroCep().getBairro().getCidade().getEstado().setIdEstado(
-					estado.getIdEstado());
+			estado = estadoRepository.save(endereco.getLogradouroCep().getBairro().getCidade().getEstado());
 		}
+		endereco.getLogradouroCep().getBairro().getCidade().setEstado(estado);
 		
 		
 		Cidade cidade = cidadeRepository.findByNome(
 				endereco.getLogradouroCep().getBairro().getCidade().getNome());
 		if(cidade == null) {
-			cidadeRepository.save(endereco.getLogradouroCep().getBairro().getCidade());
-		}else {
-			endereco.getLogradouroCep().getBairro().getCidade().setIdCidade(cidade.getIdCidade());
+			cidade = cidadeRepository.save(endereco.getLogradouroCep().getBairro().getCidade());
 		}
+		endereco.getLogradouroCep().getBairro().setCidade(cidade);
 		
 		
 		Bairro bairro = bairroRepository.findByNome(
 				endereco.getLogradouroCep().getBairro().getNome());
 		if(bairro == null) {
-			bairroRepository.save(endereco.getLogradouroCep().getBairro());
-		}else {
-			endereco.getLogradouroCep().getBairro().setIdBairro(bairro.getIdBairro());
+			bairro = bairroRepository.save(endereco.getLogradouroCep().getBairro());
 		}
+		endereco.getLogradouroCep().setBairro(bairro);
+		
 		
 		if(endereco.getLogradouroCep().getComplemento() != null) {
 			Complemento complemento = complementoRepository.findByComplemento(
 					endereco.getLogradouroCep().getComplemento().getComplemento());
 			if(complemento == null) {
-				complementoRepository.save(endereco.getLogradouroCep().getComplemento());
-			}else {
-				endereco.getLogradouroCep().getComplemento().setIdComplemento(
-						complemento.getIdComplemento());
+				complemento = complementoRepository.save(endereco.getLogradouroCep().getComplemento());
 			}
+			endereco.getLogradouroCep().setComplemento(complemento);
+			
 		}
 		
-		LogradouroCep logradouroCep = logradouroCepRepository.findByCep(
-				endereco.getLogradouroCep().getCep());
+		LogradouroCep logradouroCep = logradouroCepRepository.findByCep(endereco.getLogradouroCep().getCep());
 		if(logradouroCep == null) {
-			logradouroCepRepository.save(endereco.getLogradouroCep());
-		}else {
-			endereco.getLogradouroCep().setIdLogradouroCep(logradouroCep.getIdLogradouroCep());
+			logradouroCep = logradouroCepRepository.save(endereco.getLogradouroCep());
 		}
+		endereco.setLogradouroCep(logradouroCep);
+		
 		
 		Numero numero = numeroRepository.findByNumero(endereco.getNumero().getNumero());
 		if(numero == null) {
-			endereco.getNumero().setIdNumero(null);
-			numeroRepository.save(endereco.getNumero());
-		}else {
-			endereco.getNumero().setIdNumero(numero.getIdNumero());
+			numero = numeroRepository.save(endereco.getNumero());
 		}
+		endereco.setNumero(numero);
 		
 		
-		Endereco e = enderecoRepository.findByLogradouroCepAndNumero(
-				endereco.getLogradouroCep(), endereco.getNumero());
+		Endereco e = enderecoRepository.findByLogradouroCepAndNumero(endereco.getLogradouroCep(), endereco.getNumero());
 		
 		if(e == null) {
-			enderecoRepository.save(endereco);
-		}else {
-			endereco.setIdEndereco(e.getIdEndereco());
+			endereco = enderecoRepository.save(endereco);
 		}
 		
-		return endereco;
+		endereco.setId(e.getId());
+		
+		
+		return new EnderecoDTO(endereco);
 	}
-	
-	public Endereco estruturaEndereco(EnderecoDadosDTO enderecoDTO) {
-		
-		Endereco e = new Endereco();
-		e.setLogradouroCep(new LogradouroCep());
-		e.getLogradouroCep().setBairro(new Bairro());
-		e.getLogradouroCep().getBairro().setCidade(new Cidade());
-		e.getLogradouroCep().getBairro().getCidade().setEstado(new Estado());
-		e.setNumero(new Numero());
-		
-		e.getLogradouroCep().setCep(enderecoDTO.getCep());
-		e.getLogradouroCep().setLogradouro(enderecoDTO.getLogradouro());
-		e.getLogradouroCep().getBairro().setNome(enderecoDTO.getBairro());
-		e.getLogradouroCep().getBairro().getCidade().setNome(enderecoDTO.getCidade());
-		e.getLogradouroCep().getBairro().getCidade().getEstado().setNome(enderecoDTO.getEstado());
-		e.getNumero().setNumero(enderecoDTO.getNumero());
-		
-		if(enderecoDTO.getComplemento() != null) {
-			e.getLogradouroCep().setComplemento(new Complemento());
-			e.getLogradouroCep().getComplemento().setComplemento(enderecoDTO.getComplemento());
-		}
-		
-		return e;
-	}
-	
-	
 	
 }

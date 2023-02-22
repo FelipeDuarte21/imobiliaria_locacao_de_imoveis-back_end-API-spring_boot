@@ -12,7 +12,7 @@ import br.com.luizfelipeduarte.imobiliariaapi.entidade.Aluguel;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Locacao;
 
 @Repository
-public interface AluguelRepository extends JpaRepository<Aluguel,Integer>{
+public interface AluguelRepository extends JpaRepository<Aluguel,Long>{
 	
 	public Page<Aluguel> findByLocacao(Locacao locacao,Pageable pageable);
 	public Page<Aluguel> findByDataVencimentoBetweenOrderByDataVencimento(Date inicio,Date fim,Pageable pageable);

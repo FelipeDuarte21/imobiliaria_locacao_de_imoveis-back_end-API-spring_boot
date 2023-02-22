@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -45,7 +46,7 @@ public class Locacao implements Serializable{
 	@JoinColumn(name = "id_Inquilino")
 	private Pessoa inquilino;
 	
-	@OneToMany(mappedBy = "locacao")
+	@OneToMany(mappedBy = "locacao", cascade = CascadeType.REMOVE)
 	private List<Aluguel> alugueis = new ArrayList<>();
 	
 	public Locacao() {

@@ -31,6 +31,10 @@ public class Estado implements Serializable{
 	private List<Cidade> cidades = new ArrayList<>();
 	
 	public Estado() {	}
+	
+	public Estado(String nome) {
+		this.nome = nome;
+	}
 
 	public Long getId() {
 		return id;

@@ -185,4 +185,8 @@ public class PessoaDTO {
 		this.locacoes = locacoes;
 	}
 	
+	public void addContato(ContatoDTO contatoDTO) {
+		this.contatos.add(contatoDTO);
+	}
+	
 }

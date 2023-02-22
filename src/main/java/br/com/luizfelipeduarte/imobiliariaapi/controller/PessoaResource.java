@@ -1,10 +1,12 @@
 package br.com.luizfelipeduarte.imobiliariaapi.controller;
 
-import java.util.List;
+import java.net.URI;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,12 +18,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.luizfelipeduarte.imobiliariaapi.controller.exception.ObjectBadRequestException;
 import br.com.luizfelipeduarte.imobiliariaapi.controller.exception.ObjectNotFoundException;
-import br.com.luizfelipeduarte.imobiliariaapi.entidade.Pessoa;
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.PessoaDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.PessoaDadosDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.service.PessoaService;
+import br.com.luizfelipeduarte.imobiliariaapi.service.exception.IllegalParameterException;
+import br.com.luizfelipeduarte.imobiliariaapi.service.exception.ObjectNotFoundFromParameterException;
 import jakarta.validation.Valid;
 
 @CrossOrigin
@@ -29,133 +34,131 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/v1/pessoa")
 public class PessoaResource {
 	
-	@Autowired
-	private PessoaService pessoaService;
+	private PessoaService service;
 	
-	@GetMapping("/cpf")
-	private ResponseEntity<Pessoa> findByCpf(@RequestParam(name = "value") String cpf){
-		Pessoa p = pessoaService.findByCpf(cpf);
+	@Autowired
+	public PessoaResource(PessoaService service) {
+		this.service = service;
+	}
+	
+	@GetMapping
+	private ResponseEntity<PessoaDTO> buscarPorCPF(@RequestParam(name = "cpf") String cpf){
 		
-		if(p == null) {
-			throw new ObjectNotFoundException("Nenhuma pessoa encontrada para o CPF informado!");
-		}else {
-			return ResponseEntity.status(HttpStatus.OK).body(p);
+		try {
+			
+			PessoaDTO pessoa = this.service.buscarPorCPF(cpf);
+			
+			return ResponseEntity.ok(pessoa);
+			
+		}catch(ObjectNotFoundFromParameterException ex) {
+			return ResponseEntity.ok().build();
+			
 		}
+		
 	}
 	
 	@PostMapping
-	private ResponseEntity<Pessoa> save(@Valid @RequestBody PessoaDadosDTO pessoa) {
+	private ResponseEntity<PessoaDTO> cadastrar(@Valid @RequestBody PessoaDadosDTO pessoaDadosDTO,
+			UriComponentsBuilder uriBuilder) {
 		
-		Pessoa p  = pessoaService.save(pessoa);
-		
-		if(p == null) {
-			throw new ObjectBadRequestException("Cliente Já cadastrado!");
+		try {
+			
+			PessoaDTO pessoa  = this.service.cadastrar(pessoaDadosDTO);
+			
+			URI uri = uriBuilder.path("api/v1/pessoa/{id}").buildAndExpand(pessoa.getId()).toUri();
+			
+			return ResponseEntity.created(uri).body(pessoa);
+			
+		}catch(IllegalParameterException ex) {
+			throw new ObjectBadRequestException(ex.getMessage());
 		}
 		
-		return ResponseEntity.status(HttpStatus.CREATED).body(p);
 	}
 	
-	@PutMapping
-	private ResponseEntity<Pessoa> update(@Valid @RequestBody PessoaDadosDTO pessoa) {
+	@PutMapping("/{id}")
+	private ResponseEntity<PessoaDTO> atualizar(@PathVariable(name ="id") Long id,  
+			@Valid @RequestBody PessoaDadosDTO pessoaDadosDTO) {
 		
-		Pessoa p = pessoaService.update(pessoa);
-		
-		if(p == null) {
-			throw new ObjectBadRequestException("Falha ao tentar atualizar!");
+		try {
+			
+			PessoaDTO pessoa = this.service.atualizar(id,pessoaDadosDTO);
+			
+			return ResponseEntity.ok(pessoa);
+			
+		}catch (ObjectNotFoundFromParameterException ex) {
+			throw new ObjectNotFoundException(ex.getMessage());
 		}
-		
-		return ResponseEntity.status(HttpStatus.OK).body(p);
 		
 	}
 	
 	@DeleteMapping("/{id}")
-	private ResponseEntity<?> delete(@PathVariable Integer id) {
+	private ResponseEntity<?> excluir(@PathVariable(name="id") Long id) {
 		
-		boolean ok = pessoaService.delete(id);
-		
-		if(ok) {
-			return ResponseEntity.status(HttpStatus.OK).build();
-		}else {
-			throw new ObjectBadRequestException("Id Inválido!");
+		try {
+			
+			this.service.excluir(id);
+			
+			return ResponseEntity.ok().build();
+			
+		}catch(ObjectNotFoundFromParameterException ex) {
+			throw new ObjectNotFoundException(ex.getMessage());
 		}
+		
 	}
 	
 	@GetMapping("/{id}")
-	private ResponseEntity<Pessoa> buscarPessoaId(@PathVariable Integer id) {
+	private ResponseEntity<PessoaDTO> buscarPorId(@PathVariable(name="id") Long id) {
 		
-		Pessoa p = pessoaService.findById(id);
-		
-		if(p == null) {
-			throw new ObjectNotFoundException("Não há cliente para esse id!");
+		try {
+			
+			PessoaDTO pessoa = this.service.buscarPorId(id);
+			
+			return ResponseEntity.ok(pessoa);
+			
+		}catch(ObjectNotFoundFromParameterException ex) {
+			throw new ObjectNotFoundException(ex.getMessage());
 		}
 		
-		return ResponseEntity.status(HttpStatus.OK).body(p);
-	}
-	
-	@GetMapping("/proprietarios/all")
-	private ResponseEntity<List<Pessoa>> findAllProprietarios(){
-		
-		List<Pessoa> proprietarios = this.pessoaService.findAllProprietarios();
-		
-		if(proprietarios == null) {
-			throw new ObjectNotFoundException("Nenhum Proprietário Cadastrado!");
-		}
-		
-		return ResponseEntity.status(HttpStatus.OK).body(proprietarios);
 	}
 	
 	@GetMapping("/proprietarios")
-	private ResponseEntity<Page<Pessoa>> findAllProprietarios(
-			@RequestParam(defaultValue = "0") Integer page,
-			@RequestParam(defaultValue = "6") Integer size){
+	private ResponseEntity<Page<PessoaDTO>> buscarProprietarios(@PageableDefault
+			(page = 0, size = 6, direction = Direction.ASC, sort = "nome") Pageable paginacao){
 		
-		Page<Pessoa> pageProps = pessoaService.findAllProprietarios(page,size);
+		Page<PessoaDTO> pgProprietarios = this.service.buscarProprietarios(paginacao);
 		
-		return ResponseEntity.status(HttpStatus.OK).body(pageProps);
+		return ResponseEntity.ok(pgProprietarios);
+		
 	}
 	
-	@GetMapping("/proprietarios/search")
-	private ResponseEntity<Page<Pessoa>> findByNomeProprietario(@RequestParam(defaultValue = "") String nome,
-			@RequestParam(defaultValue = "0") Integer page,
-			@RequestParam(defaultValue = "6") Integer size){
+	@GetMapping("/proprietario")
+	private ResponseEntity<Page<PessoaDTO>> buscarProprietarioPorNome(@RequestParam(defaultValue = "nome") String nome,
+			@PageableDefault (page = 0, size = 6, direction = Direction.ASC, sort = "nome") Pageable paginacao){
 		
-		Page<Pessoa> pageProps = pessoaService.findContainingNomeProprietario(nome,page,size);
+		Page<PessoaDTO> pgProprietarios = this.service.buscarProprietarioPorNome(nome,paginacao);
 		
-		return ResponseEntity.status(HttpStatus.OK).body(pageProps);
-	}
-	
-	@GetMapping("/inquilinos/all")
-	private ResponseEntity<List<Pessoa>> findAllInquilinos(){
+		return ResponseEntity.ok(pgProprietarios);
 		
-		List<Pessoa> inquilinos = this.pessoaService.findAllInquilinos();
-		
-		if(inquilinos == null) {
-			throw new ObjectNotFoundException("Nenhum Inquilino Cadastrado!");
-		}
-		
-		return ResponseEntity.status(HttpStatus.OK).body(inquilinos);
 	}
 	
 	@GetMapping("/inquilinos")
-	private ResponseEntity<Page<Pessoa>> findAllInquilinos(
-			@RequestParam(defaultValue = "0") Integer page,
-			@RequestParam(defaultValue = "6") Integer size){
+	private ResponseEntity<Page<PessoaDTO>> buscarInquilinos(
+			@PageableDefault (page = 0, size = 6, direction = Direction.ASC, sort = "nome") Pageable paginacao){
 		
-		Page<Pessoa> pageInq  = pessoaService.findAllInquilinos(page,size);
+		Page<PessoaDTO> pgInquilinos  = this.service.buscarInquilinos(paginacao);
 		
-		return ResponseEntity.status(HttpStatus.OK).body(pageInq);
+		return ResponseEntity.ok(pgInquilinos);
+		
 	}
 	
-	@GetMapping("/inquilinos/search")
-	private ResponseEntity<Page<Pessoa>> findByNomeInquilino(@RequestParam(defaultValue = "") String nome,
-			@RequestParam(defaultValue = "0") Integer page,
-			@RequestParam(defaultValue = "6") Integer size){
+	@GetMapping("/inquilino")
+	private ResponseEntity<Page<PessoaDTO>> findByNomeInquilino(@RequestParam(defaultValue = "") String nome,
+			@PageableDefault (page = 0, size = 6, direction = Direction.ASC, sort = "nome") Pageable paginacao){
 		
-		Page<Pessoa> pageInq = pessoaService.findContainingNomeInquilino(nome,page,size);
+		Page<PessoaDTO> pqInquilinos = this.service.buscarInquilinoPorNome(nome, paginacao);
 		
-		
-		return ResponseEntity.status(HttpStatus.OK).body(pageInq);
-	}
+		return ResponseEntity.ok(pqInquilinos);
 	
+	}
 	
 }

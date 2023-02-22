@@ -30,6 +30,10 @@ public class Complemento implements Serializable{
 	public Complemento() {
 		
 	}
+	
+	public Complemento(String complemento) {
+		this.complemento = complemento;
+	}
 
 	public Long getId() {
 		return id;

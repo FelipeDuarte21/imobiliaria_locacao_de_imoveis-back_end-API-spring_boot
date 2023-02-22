@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Numero;
 
 @Repository
-public interface NumeroRepository extends JpaRepository<Numero,Integer>{
+public interface NumeroRepository extends JpaRepository<Numero,Long>{
 	
 	public Numero findByNumero(String numero);
 	

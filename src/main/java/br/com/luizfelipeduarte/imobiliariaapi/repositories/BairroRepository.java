@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Bairro;
 
 @Repository
-public interface BairroRepository extends JpaRepository<Bairro,Integer>{
+public interface BairroRepository extends JpaRepository<Bairro,Long>{
 	
 	public Bairro findByNome(String nome);
 	

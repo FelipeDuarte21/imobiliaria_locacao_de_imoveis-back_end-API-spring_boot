@@ -30,6 +30,10 @@ public class Numero implements Serializable{
 	public Numero() {
 		
 	}
+	
+	public Numero(String numero) {
+		this.numero = numero;
+	}
 
 	public Long getId() {
 		return id;

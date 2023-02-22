@@ -8,7 +8,7 @@ import br.com.luizfelipeduarte.imobiliariaapi.entidade.LogradouroCep;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Numero;
 
 @Repository
-public interface EnderecoRepository extends JpaRepository<Endereco,Integer>{
+public interface EnderecoRepository extends JpaRepository<Endereco,Long>{
 	
 	public Endereco findByLogradouroCepAndNumero(LogradouroCep l,Numero n);
 	

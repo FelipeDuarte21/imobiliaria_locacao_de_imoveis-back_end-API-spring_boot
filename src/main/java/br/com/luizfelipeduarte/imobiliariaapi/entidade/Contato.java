@@ -3,6 +3,7 @@ package br.com.luizfelipeduarte.imobiliariaapi.entidade;
 import java.io.Serializable;
 import java.util.Objects;
 
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.ContatoDadosDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.enums.TipoContato;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -35,6 +36,12 @@ public class Contato implements Serializable{
 	
 	public Contato() {
 		
+	}
+	
+	public Contato(ContatoDadosDTO contatoDadosDTO) {
+		this.id = contatoDadosDTO.getId();
+		this.tipoContato = TipoContato.toEnum(contatoDadosDTO.getTipoContato());
+		this.numero = contatoDadosDTO.getNumero();
 	}
 
 	public Long getId() {

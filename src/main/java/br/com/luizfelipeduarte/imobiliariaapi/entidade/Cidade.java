@@ -36,8 +36,9 @@ public class Cidade implements Serializable{
 	@OneToMany(mappedBy = "cidade")
 	private List<Bairro> bairros = new ArrayList<>();
 	
-	public Cidade() {
-		
+	public Cidade(String nome, String estado) {
+		this.nome = nome;
+		this.estado = new Estado(estado);
 	}
 
 	public Long getId() {
