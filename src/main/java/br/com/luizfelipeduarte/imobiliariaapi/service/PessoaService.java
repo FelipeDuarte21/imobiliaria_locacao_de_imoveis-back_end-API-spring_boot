@@ -63,11 +63,11 @@ public class PessoaService {
 		if(optPessoa.isPresent() && !pessoa.getTipoPessoa().equals(optPessoa.get().getTipoPessoa()))
 			pessoa.setTipoPessoa(TipoPessoa.PROPRIETARIO_E_INQUILINO);
 		
+		pessoa.setEndereco(this.enderecoService.salvar(pessoaDadosDTO.getEndereco()));
+		
 		pessoa = this.repository.save(pessoa);
 		
 		PessoaDTO pessoaDTO  = new PessoaDTO(pessoa);
-		
-		pessoaDTO.setEndereco(this.enderecoService.salvar(pessoaDadosDTO.getEndereco()));
 		
 		//Exclui contatos
 		List<Contato> contatosExcluidos = new ArrayList<>();
@@ -112,12 +112,11 @@ public class PessoaService {
 		pessoa.setDataExpedicao(pessoaDadosDTO.getDataExpedicao());
 		pessoa.setSalario(pessoaDadosDTO.getSalario());
 		pessoa.setEmail(pessoaDadosDTO.getEmail());
+		pessoa.setEndereco(this.enderecoService.salvar(pessoaDadosDTO.getEndereco()));
 		
 		pessoa  = this.repository.save(pessoa);
 		
 		PessoaDTO pessoaDTO = new PessoaDTO(pessoa);
-		
-		pessoaDTO.setEndereco(this.enderecoService.salvar(pessoaDadosDTO.getEndereco()));
 		
 		//Exclui contatos
 		List<Contato> contatosExcluidos = new ArrayList<>();
@@ -168,6 +167,17 @@ public class PessoaService {
 	
 	public Page<PessoaDTO> buscarProprietarios(Pageable paginacao){
 		return this.buscarTodos(TipoPessoa.PROPRIETARIO, TipoPessoa.PROPRIETARIO_E_INQUILINO, paginacao);
+	}
+	
+	public Pessoa buscarProprietarioPorId(Long id) {
+		
+		Optional<Pessoa> optPessoa = this.repository.findByAtivoAndTipoPessoaAndTipoPessoa(true, 
+				TipoPessoa.PROPRIETARIO, TipoPessoa.PROPRIETARIO_E_INQUILINO);
+		
+		if(optPessoa.isEmpty()) throw new ObjectNotFoundFromParameterException("Erro! Proprietario não econtrado!");
+		
+		return optPessoa.get();
+		
 	}
 	
 	public Page<PessoaDTO> buscarProprietarioPorNome(String nome,Pageable paginacao){

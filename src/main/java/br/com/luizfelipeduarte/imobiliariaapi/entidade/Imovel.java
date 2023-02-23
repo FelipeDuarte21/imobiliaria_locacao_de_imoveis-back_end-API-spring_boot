@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.ImovelDadosDTO;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -42,8 +44,20 @@ public class Imovel implements Serializable{
 	@JoinColumn(name = "id_Proprietario")
 	private Pessoa proprietario;
 	
+	@OneToOne(mappedBy = "imovel", cascade = CascadeType.REMOVE)
+	private Locacao locacao;
+	
 	public Imovel() {
 		
+	}
+	
+	public Imovel(ImovelDadosDTO imovelDadosDTO) {
+		this.id = imovelDadosDTO.getId();
+		this.preco = imovelDadosDTO.getPreco();
+		this.tipo = imovelDadosDTO.getTipo();
+		this.descricao = imovelDadosDTO.getDescricao();
+		this.disponivel = true;
+		this.endereco = new Endereco(imovelDadosDTO.getEndereco());	
 	}
 
 	public Long getId() {
@@ -100,6 +114,14 @@ public class Imovel implements Serializable{
 
 	public void setProprietario(Pessoa proprietario) {
 		this.proprietario = proprietario;
+	}
+
+	public Locacao getLocacao() {
+		return locacao;
+	}
+
+	public void setLocacao(Locacao locacao) {
+		this.locacao = locacao;
 	}
 
 	@Override

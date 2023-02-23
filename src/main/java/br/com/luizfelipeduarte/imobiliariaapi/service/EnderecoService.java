@@ -10,7 +10,6 @@ import br.com.luizfelipeduarte.imobiliariaapi.entidade.Endereco;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Estado;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.LogradouroCep;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Numero;
-import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.EnderecoDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.EnderecoDadosDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.repositories.BairroRepository;
 import br.com.luizfelipeduarte.imobiliariaapi.repositories.CidadeRepository;
@@ -46,7 +45,7 @@ public class EnderecoService {
 		this.enderecoRepository = enderecoRepository;
 	}
 
-	public EnderecoDTO salvar(EnderecoDadosDTO enderecoDadosDTO) {
+	public Endereco salvar(EnderecoDadosDTO enderecoDadosDTO) {
 		
 		Endereco endereco = new Endereco(enderecoDadosDTO);
 		
@@ -107,7 +106,7 @@ public class EnderecoService {
 		endereco.setId(e.getId());
 		
 		
-		return new EnderecoDTO(endereco);
+		return endereco;
 	}
 	
 }

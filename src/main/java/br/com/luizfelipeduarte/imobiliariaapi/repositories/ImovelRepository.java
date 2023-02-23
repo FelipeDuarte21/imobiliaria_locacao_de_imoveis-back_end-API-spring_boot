@@ -1,5 +1,6 @@
 package br.com.luizfelipeduarte.imobiliariaapi.repositories;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -15,13 +16,13 @@ import br.com.luizfelipeduarte.imobiliariaapi.entidade.Pessoa;
 @Repository
 public interface ImovelRepository extends JpaRepository<Imovel,Long>{
 	
-	public List<Imovel> findByDisponivelAndProprietario(Boolean disponivel,Pessoa proprietario);
+	public Page<Imovel> findByDisponivelAndProprietario(Boolean disponivel,Pessoa proprietario,Pageable pageable);
 	
 	public Page<Imovel> findByDisponivel(Boolean disponivel,Pageable pageable);
 	
-	public List<Imovel> findByProprietario(Pessoa proprietario);
+	public Page<Imovel> findByProprietario(Pessoa proprietario, Pageable pageable);
 	
-	public Page<Imovel> findByPrecoLessThanEqualAndDisponivel(Double preco,Boolean valor,Pageable pageable);
+	public Page<Imovel> findByPrecoLessThanEqualAndDisponivel(BigDecimal preco,Boolean valor,Pageable pageable);
 	
 	public Imovel findByEndereco(Endereco endereco);
 	

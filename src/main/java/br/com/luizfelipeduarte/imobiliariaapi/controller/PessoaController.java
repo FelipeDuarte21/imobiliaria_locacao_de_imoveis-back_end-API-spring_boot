@@ -32,12 +32,12 @@ import jakarta.validation.Valid;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v1/pessoa")
-public class PessoaResource {
+public class PessoaController {
 	
 	private PessoaService service;
 	
 	@Autowired
-	public PessoaResource(PessoaService service) {
+	public PessoaController(PessoaService service) {
 		this.service = service;
 	}
 	

@@ -1,199 +1,144 @@
 package br.com.luizfelipeduarte.imobiliariaapi.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import br.com.luizfelipeduarte.imobiliariaapi.controller.exception.ObjectNotFoundException;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Imovel;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Pessoa;
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.ImovelDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.ImovelDadosDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.repositories.ImovelRepository;
+import br.com.luizfelipeduarte.imobiliariaapi.service.exception.ObjectNotFoundFromParameterException;
 
 @Service
 public class ImovelService {
 	
-	@Autowired
-	private ImovelRepository imovelRepository;
+	private ImovelRepository repository;
 	
-	@Autowired
 	private EnderecoService enderecoService;
-	
-	@Autowired
 	private PessoaService pessoaService;
 	
 	@Autowired
-	private LocacaoService locacaoService;
-	
-	private Imovel converteImovelDTO(ImovelDadosDTO imovelDTO) {
-		
-		//Dados Gerais
-		Imovel i = new Imovel();
-		i.setIdImovel(imovelDTO.getIdImovel());
-		i.setPreco(imovelDTO.getPreco());
-		i.setDescricao(imovelDTO.getDescricao());
-		i.setTipo(imovelDTO.getTipo());
-		i.setDisponivel(true);
-		
-		//Endereco
-		i.setEndereco(this.enderecoService.estruturaEndereco(imovelDTO.getEndereco()));
-		
-		//Proprietario
-		Pessoa p = this.pessoaService.findById(imovelDTO.getIdProprietario());
-		if(p == null) {
-			i.setProprietario(null);
-		}else {
-			i.setProprietario(p);
-		}
-		
-		return i;
+	public ImovelService(ImovelRepository repository,EnderecoService enderecoService,
+			PessoaService pessoaService) {
+		this.repository = repository;
+		this.enderecoService = enderecoService;
+		this.pessoaService = pessoaService;
 	}
 	
-	public Imovel save(ImovelDadosDTO imovelDTO) {
+	public ImovelDTO cadastrar(ImovelDadosDTO imovelDadosDTO) {
 		
-		Imovel imovel = this.converteImovelDTO(imovelDTO);
+		Pessoa proprietario = this.pessoaService.buscarProprietarioPorId(imovelDadosDTO.getIdProprietario());
 		
-		if(imovel.getProprietario() == null) {
-			return imovel;
-		}
+		Imovel imovel = new Imovel(imovelDadosDTO);
+		imovel.setProprietario(proprietario);
+		imovel.setEndereco(this.enderecoService.salvar(imovelDadosDTO.getEndereco()));
 		
-		enderecoService.save(imovel.getEndereco());
-		
-		if(imovelRepository.findByEndereco(imovel.getEndereco()) != null) {
-			return null;
-		}
-		
-		imovelRepository.save(imovel);
-		
-		return imovel;
+		return new ImovelDTO(imovel);
 	}
 	
-	public Imovel update(ImovelDadosDTO imovelDTO) {
+	public ImovelDTO atualizar(Long id, ImovelDadosDTO imovelDadosDTO) {
 		
-		Imovel imovel = this.converteImovelDTO(imovelDTO);
-		if(imovel.getProprietario() == null) {
-			return imovel;
-		}
+		Optional<Imovel> optImovel = this.repository.findById(imovelDadosDTO.getId());
 		
-		return this.update(imovel);
+		if(optImovel.isEmpty()) throw new ObjectNotFoundException("Erro! Imóvel não encontrado!");
+		
+		Imovel imovel = optImovel.get();
+		imovel.setDescricao(imovelDadosDTO.getDescricao());
+		imovel.setPreco(imovelDadosDTO.getPreco());
+		imovel.setTipo(imovelDadosDTO.getTipo());
+		imovel.setEndereco(this.enderecoService.salvar(imovelDadosDTO.getEndereco()));
+		
+		imovel = this.repository.save(imovel);
+		
+		return new ImovelDTO(imovel);
+		
 	}
 	
-	public Imovel update(Imovel imovel) {
+	public void excluir(Long id) {
 		
-		enderecoService.save(imovel.getEndereco());
+		Optional<Imovel> optImovel = this.repository.findById(id);
 		
-		imovelRepository.save(imovel);
+		if(optImovel.isEmpty()) throw new ObjectNotFoundFromParameterException("Erro! imóvel não econtrado!");
 		
-		return imovel;
+		this.repository.delete(optImovel.get());
+ 		
 	}
 	
-	public boolean delete(Integer id) {
+	public ImovelDTO buscarPorId(Long id) {
 		
-		Imovel imovel = this.findById(id);
+		Optional<Imovel> optImovel = this.repository.findById(id);
 		
-		if(imovel != null) {
-			
-			if(!imovel.getDisponivel()) {
-				locacaoService.delete(locacaoService.findByImovel(imovel).getIdLocacao());
-			}
-			
-			imovelRepository.delete(imovel);
-			
-			return true;
-		}
+		if(optImovel.isEmpty()) throw new ObjectNotFoundFromParameterException("Erro! imóvel não econtrado!");
 		
-		return false;
+		return new ImovelDTO(optImovel.get());
+		
 	}
 	
-	public Imovel findById(Integer id) {
+	public Page<ImovelDTO> buscarTodos(Pageable paginacao){
 		
-		Optional<Imovel> imovel = imovelRepository.findById(id);
+		Page<Imovel> imoveis = this.repository.findAll(paginacao);
 		
-		if(!imovel.isPresent()) {
-			return null;
-		}
+		return imoveis.map(ImovelDTO::new);
 		
-		return imovel.get();
 	}
 	
-	public Page<Imovel> findAll(Integer page, Integer size){
+	public Page<ImovelDTO> buscarDisponiveis(Pageable paginacao){
 		
-		PageRequest pageable = PageRequest.of(page, size);
+		Page<Imovel> imoveis = this.repository.findByDisponivel(true, paginacao);
 		
-		Page<Imovel> imoveis = this.imovelRepository.findAll(pageable);
+		return imoveis.map(ImovelDTO::new);
 		
-		return imoveis;
 	}
 	
-	public List<Imovel> findAll(){
+	public Page<ImovelDTO> buscarDisponiveisPorPreco(BigDecimal preco,Pageable paginacao){
 		
-		List<Imovel> imoveis = this.imovelRepository.findAll();
+		Page<Imovel> imoveis = this.repository.findByPrecoLessThanEqualAndDisponivel(preco,true,paginacao);
 		
-		if(imoveis.isEmpty()) {
-			return null;
-		}
+		return imoveis.map(ImovelDTO::new);
 		
-		return imoveis;
 	}
 	
-	public List<Imovel> findByDisponivel(Integer id){
+	public Page<ImovelDTO> buscarDisponiveisPorProprietario(Long id, Pageable paginacao){
 		
-		List<Imovel> imoveis = this.imovelRepository.findByDisponivelAndProprietario(true,
-				this.pessoaService.findById(id));
+		Pessoa proprietario = this.pessoaService.buscarProprietarioPorId(id);
 		
-		if(imoveis.isEmpty()) {
-			return null;
-		}
+		Page<Imovel> imoveis = this.repository.findByDisponivelAndProprietario(true, proprietario, paginacao);
+	
+		return imoveis.map(ImovelDTO::new);
 		
-		return imoveis;
 	}
 	
-	public Page<Imovel> findByDisponivel(Integer page, Integer size){
+	public Page<ImovelDTO> buscarPorProprietario(Long id, Pageable paginacao) {
 		
-		PageRequest pageable = PageRequest.of(page, size,Direction.ASC,"preco");
+		Pessoa proprietario = this.pessoaService.buscarProprietarioPorId(id);
 		
-		Page<Imovel> imoveis = imovelRepository.findByDisponivel(true, pageable);
+		Page<Imovel> imoveis = this.repository.findByProprietario(proprietario, paginacao);
 		
-		return imoveis;
+		return imoveis.map(ImovelDTO::new);
+		
 	}
 	
-	public Page<Imovel> findByDisponivel(Double preco,Integer page,Integer size){
-		
-		PageRequest pageable = PageRequest.of(page, size,Direction.ASC, "preco");
-		
-		Page<Imovel> imoveis = imovelRepository.findByPrecoLessThanEqualAndDisponivel(preco,true,pageable);
-		
-		return imoveis;
-	}
-	
-	public List<Imovel> findByProprietario(Integer id){
-		
-		List<Imovel> imoveis = imovelRepository.findByProprietario(pessoaService.findById(id));
-		
-		if(imoveis.isEmpty()) {
-			return null;
-		}
-		
-		return imoveis;
-	}
-	
-	public Page<Imovel> findByNomeProprietario(String nome,Integer page,Integer size){
-		
-		PageRequest pageable = PageRequest.of(page, size,Direction.ASC,"preco");
+	public Page<ImovelDTO> buscarPorNomeProprietario(String nome,Pageable paginacao){
 		
 		Page<Imovel> imoveis;
 		
 		if(nome.isEmpty() || nome == null) {
-			imoveis = imovelRepository.findAll(pageable);
+			imoveis = this.repository.findAll(paginacao);
 		}else {
-			imoveis = imovelRepository.findByNomeProprietario(nome,pageable);
+			imoveis = this.repository.findByNomeProprietario(nome, paginacao);
 		}
 		
-		return imoveis;
+		return imoveis.map(ImovelDTO::new);
 	}
 	
 }
