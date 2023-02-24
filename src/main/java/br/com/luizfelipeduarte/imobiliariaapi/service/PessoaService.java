@@ -20,7 +20,6 @@ import br.com.luizfelipeduarte.imobiliariaapi.repositories.PessoaRepository;
 import br.com.luizfelipeduarte.imobiliariaapi.service.exception.IllegalParameterException;
 import br.com.luizfelipeduarte.imobiliariaapi.service.exception.ObjectNotFoundFromParameterException;
 
-
 @Service
 public class PessoaService {
 	
@@ -171,12 +170,23 @@ public class PessoaService {
 	
 	public Pessoa buscarProprietarioPorId(Long id) {
 		
-		Optional<Pessoa> optPessoa = this.repository.findByAtivoAndTipoPessoaAndTipoPessoa(true, 
+		Optional<Pessoa> optProprietario = this.repository.findByAtivoAndTipoPessoaAndTipoPessoa(true, 
 				TipoPessoa.PROPRIETARIO, TipoPessoa.PROPRIETARIO_E_INQUILINO);
 		
-		if(optPessoa.isEmpty()) throw new ObjectNotFoundFromParameterException("Erro! Proprietario não econtrado!");
+		if(optProprietario.isEmpty()) throw new ObjectNotFoundFromParameterException("Erro! Proprietario não econtrado!");
 		
-		return optPessoa.get();
+		return optProprietario.get();
+		
+	}
+	
+	public Pessoa buscarInquilinoPorId(Long id) {
+		
+		Optional<Pessoa> optInquilino = this.repository.findByAtivoAndTipoPessoaAndTipoPessoa(true, 
+				TipoPessoa.INQUILINO, TipoPessoa.PROPRIETARIO_E_INQUILINO);
+		
+		if(optInquilino.isEmpty()) throw new ObjectNotFoundFromParameterException("Erro! Inquilino não econtrado!");
+		
+		return optInquilino.get();
 		
 	}
 	

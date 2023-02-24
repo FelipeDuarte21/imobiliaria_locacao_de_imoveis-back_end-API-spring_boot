@@ -1,14 +1,11 @@
 package br.com.luizfelipeduarte.imobiliariaapi.service;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.luizfelipeduarte.imobiliariaapi.controller.exception.ObjectNotFoundException;
@@ -84,6 +81,16 @@ public class ImovelService {
 		
 	}
 	
+	public Imovel buscarImovelPorId(Long id) {
+		
+		Optional<Imovel> optImovel = this.repository.findById(id);
+		
+		if(optImovel.isEmpty()) throw new ObjectNotFoundFromParameterException("Erro! Imóvel não econtrado!");
+		
+		return optImovel.get();
+		
+	}
+	
 	public Page<ImovelDTO> buscarTodos(Pageable paginacao){
 		
 		Page<Imovel> imoveis = this.repository.findAll(paginacao);
@@ -139,6 +146,12 @@ public class ImovelService {
 		}
 		
 		return imoveis.map(ImovelDTO::new);
+	}
+	
+	public void disponibilizarImovel(Long id) {
+		Imovel imovel = this.buscarImovelPorId(id);
+		imovel.setDisponivel(true);
+		this.repository.save(imovel);
 	}
 	
 }

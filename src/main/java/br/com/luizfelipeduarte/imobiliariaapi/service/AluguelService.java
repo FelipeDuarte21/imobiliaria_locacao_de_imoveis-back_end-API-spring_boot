@@ -1,5 +1,7 @@
 package br.com.luizfelipeduarte.imobiliariaapi.service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -12,22 +14,58 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Aluguel;
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.Locacao;
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.AluguelDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.repositories.AluguelRepository;
 
 @Service
 public class AluguelService {
 	
 	@Autowired
-	private AluguelRepository aluguelRepository;
+	private AluguelRepository repository;
 	
 	@Autowired
 	private LocacaoService locacaoService;
 	
-
-	public List<Aluguel> saveAll(List<Aluguel> alugueis) {
-		return aluguelRepository.saveAll(alugueis);
+	
+	public List<AluguelDTO> gerarAlugueis(Locacao locacao){
+		
+		List<Aluguel> alugueis = new ArrayList<>();
+		
+		for(int i = 1; i <= Integer.parseInt(locacao.getTempo()); i++) {
+			
+			Aluguel aluguel = new Aluguel();
+			aluguel.setDataVencimento(locacao.getDataInicio().plusMonths(i));
+			aluguel.setLocacao(locacao);
+			
+			alugueis.add(aluguel);
+			
+		}
+		
+		alugueis = this.repository.saveAll(alugueis);
+		
+		return alugueis.stream().map(AluguelDTO::new).toList();
+		
 	}
 	
+	public List<AluguelDTO> alterarDataVencimentoAlugueis(Locacao locacao){
+		
+		List<Aluguel> alugueis = locacao.getAlugueis();
+		
+		for(int i = 1; i <= Integer.parseInt(locacao.getTempo()); i++) {
+			
+			LocalDate dataVencimento = locacao.getDataInicio().plusMonths(i);
+ 			
+			alugueis.get(i-1).setDataVencimento(dataVencimento);
+		
+		}
+		
+		alugueis = this.repository.saveAll(alugueis);
+		
+		return alugueis.stream().map(AluguelDTO::new).toList();
+		
+	}
+
 	public Aluguel recordPayment(Integer idAluguel){
 		
 		try {

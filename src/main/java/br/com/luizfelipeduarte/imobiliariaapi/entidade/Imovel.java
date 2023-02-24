@@ -142,7 +142,5 @@ public class Imovel implements Serializable{
 				&& Objects.equals(id, other.id) && Objects.equals(preco, other.preco)
 				&& Objects.equals(tipo, other.tipo);
 	}
-
-	
 	
 }

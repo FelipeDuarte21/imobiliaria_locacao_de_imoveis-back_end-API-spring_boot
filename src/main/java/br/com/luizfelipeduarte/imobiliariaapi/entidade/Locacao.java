@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.LocacaoDadosDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -51,6 +52,15 @@ public class Locacao implements Serializable{
 	
 	public Locacao() {
 		
+	}
+	
+	public Locacao(LocacaoDadosDTO locacaoDadosDTO) {
+		this.id = locacaoDadosDTO.getId();
+		this.data = locacaoDadosDTO.getData();
+		this.tempo = locacaoDadosDTO.getTempo();
+		this.dataInicio = locacaoDadosDTO.getDataInicio();
+		this.dataTermino = locacaoDadosDTO.getDataTermino();
+		this.valor = locacaoDadosDTO.getValor();
 	}
 
 	public Long getId() {
