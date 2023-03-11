@@ -99,12 +99,11 @@ public class EnderecoService {
 		
 		Endereco e = enderecoRepository.findByLogradouroCepAndNumero(endereco.getLogradouroCep(), endereco.getNumero());
 		
-		if(e == null) {
-			endereco = enderecoRepository.save(endereco);
+		if(e != null) {
+			endereco.setId(e.getId());
 		}
 		
-		endereco.setId(e.getId());
-		
+		endereco = enderecoRepository.save(endereco);
 		
 		return endereco;
 	}

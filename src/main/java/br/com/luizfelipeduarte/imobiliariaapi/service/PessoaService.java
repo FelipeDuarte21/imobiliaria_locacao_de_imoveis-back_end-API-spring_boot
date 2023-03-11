@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Contato;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Pessoa;
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.ContatoDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.ContatoDadosDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.PessoaDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.PessoaDadosDTO;
@@ -69,25 +70,29 @@ public class PessoaService {
 		PessoaDTO pessoaDTO  = new PessoaDTO(pessoa);
 		
 		//Exclui contatos
-		List<Contato> contatosExcluidos = new ArrayList<>();
-		for(Contato contato: optPessoa.get().getContatos()) {
-			boolean achou = false;
-			for(Contato contato2: pessoa.getContatos()) {
-				if(contato.getNumero().equals(contato2.getNumero())) {
-					achou = true;
-					break;
+		if(optPessoa.isPresent()) {
+			List<Contato> contatosExcluidos = new ArrayList<>();
+			for(Contato contato: optPessoa.get().getContatos()) {
+				boolean achou = false;
+				for(Contato contato2: pessoa.getContatos()) {
+					if(contato.getNumero().equals(contato2.getNumero())) {
+						achou = true;
+						break;
+					}
+				}
+				if(!achou) {
+					contatosExcluidos.add(contato);
 				}
 			}
-			if(!achou) {
-				contatosExcluidos.add(contato);
-			}
+			contatosExcluidos.forEach(contato -> this.contatoService.excluir(contato.getId()));
 		}
-		contatosExcluidos.forEach(contato -> this.contatoService.excluir(contato.getId()));
 		
 		//Cadastrar contatos
+		List<ContatoDTO> contatos = new ArrayList<>();
 		for(ContatoDadosDTO contato: pessoaDadosDTO.getContatos()) {
-			pessoaDTO.addContato(this.contatoService.cadastrar(pessoa, contato));
+			contatos.add(this.contatoService.cadastrar(pessoa, contato));
 		}
+		pessoaDTO.setContatos(contatos);
 		
 		return pessoaDTO;
 		
@@ -134,9 +139,11 @@ public class PessoaService {
 		contatosExcluidos.forEach(contato -> this.contatoService.excluir(contato.getId()));
 				
 		//Cadastrar contatos
+		List<ContatoDTO> contatos = new ArrayList<>();
 		for(ContatoDadosDTO contato: pessoaDadosDTO.getContatos()) {
-			pessoaDTO.addContato(this.contatoService.cadastrar(pessoa, contato));
+			contatos.add(this.contatoService.cadastrar(pessoa, contato));
 		}
+		pessoaDTO.setContatos(contatos);
 		
 		return pessoaDTO;
 		
@@ -158,9 +165,10 @@ public class PessoaService {
 		
 		Optional<Pessoa> optPessoa = this.repository.findById(id);
 		
-		if(optPessoa.isEmpty())
+		if(optPessoa.isEmpty()) {
 			throw new ObjectNotFoundFromParameterException("Erro! Pessoa não encontrada para id informado!");
-		
+		}
+			
 		return new PessoaDTO(optPessoa.get());
 	}
 	

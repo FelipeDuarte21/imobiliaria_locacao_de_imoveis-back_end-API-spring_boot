@@ -176,7 +176,7 @@ public class ImovelController {
 	}
 	
 	@GetMapping("/proprietario")
-	private ResponseEntity<Page<ImovelDTO>> findByNome(
+	private ResponseEntity<Page<ImovelDTO>> buscarPorNomeProprietario(
 		@RequestParam(defaultValue = "", name = "nome") String nome,
 		@PageableDefault(page = 0, size = 6, direction = Direction.ASC, sort = "preco") Pageable paginacao){
 		

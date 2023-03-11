@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,9 +30,12 @@ public class Cidade implements Serializable{
 	@JoinColumn(name = "id_Estado")
 	private Estado estado;
 	
-	@JsonIgnore
 	@OneToMany(mappedBy = "cidade")
 	private List<Bairro> bairros = new ArrayList<>();
+	
+	public Cidade() {
+		
+	}
 	
 	public Cidade(String nome, String estado) {
 		this.nome = nome;

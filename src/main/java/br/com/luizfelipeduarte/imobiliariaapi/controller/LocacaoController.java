@@ -22,6 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.luizfelipeduarte.imobiliariaapi.controller.exception.ObjectBadRequestException;
 import br.com.luizfelipeduarte.imobiliariaapi.controller.exception.ObjectNotFoundException;
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.AluguelDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.LocacaoDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.LocacaoDadosDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.service.LocacaoService;
@@ -93,7 +94,7 @@ public class LocacaoController {
 	}
 	
 	@GetMapping("/{id}")
-	private ResponseEntity<LocacaoDTO> BuscarPorId(@PathVariable Long id) {
+	private ResponseEntity<LocacaoDTO> buscarPorId(@PathVariable Long id) {
 		
 		try {
 			
@@ -106,6 +107,24 @@ public class LocacaoController {
 			
 		}
 	
+	}
+	
+	@GetMapping("/{id}/alugueis")
+	private ResponseEntity<Page<AluguelDTO>> buscarAlugueis(
+			@PathVariable(name = "id") Long id,
+			@PageableDefault (page = 0, size = 6, direction = Direction.ASC, sort = "dataVencimento") Pageable paginacao){
+		
+		try {
+			
+			Page<AluguelDTO> pgAlugueis = this.service.buscarAlugueis(id, paginacao);
+			
+			return ResponseEntity.ok(pgAlugueis);
+			
+		}catch(ObjectNotFoundFromParameterException  ex) {
+			throw new ObjectNotFoundException(ex.getMessage());
+			
+		}
+		
 	}
 	
 	@GetMapping("/inquilino/{id}")

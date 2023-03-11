@@ -23,6 +23,8 @@ public class ContatoService {
 	
 	public ContatoDTO cadastrar(Pessoa pessoa, ContatoDadosDTO contatoDadosDTO) {
 		
+		System.out.println(contatoDadosDTO);
+		
 		Optional<Contato> optContato = this.repository.findByNumero(contatoDadosDTO.getNumero());
 		
 		if(optContato.isPresent()) return new ContatoDTO(optContato.get());
@@ -31,6 +33,7 @@ public class ContatoService {
 		contato.setPessoa(pessoa);
 		
 		contato = this.repository.save(contato);
+		
 		return new ContatoDTO(contato);
 		
 	}

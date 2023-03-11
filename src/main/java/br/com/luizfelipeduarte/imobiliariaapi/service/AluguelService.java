@@ -2,31 +2,29 @@ package br.com.luizfelipeduarte.imobiliariaapi.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Aluguel;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Locacao;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.AluguelDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.repositories.AluguelRepository;
+import br.com.luizfelipeduarte.imobiliariaapi.service.exception.ObjectNotFoundFromParameterException;
 
 @Service
 public class AluguelService {
 	
-	@Autowired
 	private AluguelRepository repository;
 	
 	@Autowired
-	private LocacaoService locacaoService;
-	
+	public AluguelService(AluguelRepository repository) {
+		this.repository = repository;
+	}
 	
 	public List<AluguelDTO> gerarAlugueis(Locacao locacao){
 		
@@ -66,113 +64,66 @@ public class AluguelService {
 		
 	}
 
-	public Aluguel recordPayment(Integer idAluguel){
+	public AluguelDTO pagarAlguel(Long id){
 		
-		try {
+		Optional<Aluguel> optAluguel = this.repository.findById(id);
+		
+		if(optAluguel.isEmpty()) throw new ObjectNotFoundFromParameterException("Erro! Aluguel não encontrado!");
+		
+		Aluguel aluguel = optAluguel.get();
+		aluguel.setQuite(true);
+		aluguel.setDataPagamento(LocalDate.now());
 			
-			Aluguel aluguel = this.findById(idAluguel);
+		aluguel = this.repository.save(aluguel);
 			
-			if(aluguel == null) {
-				Aluguel a = new Aluguel();
-				a.setQuite(false);
-				return a;
-			}
-			
-			aluguel.setQuite(true);
-			
-			Calendar data = Calendar.getInstance();
-			aluguel.setDataPagamento(data.getTime());
-			
-			aluguelRepository.save(aluguel);
-			
-			return aluguel;
-			
-		}catch(RuntimeException ex) {
-			return null;
-		}
+		return new AluguelDTO(aluguel);
 		
 	}
 	
-	public Aluguel findById(Integer id){
+	public AluguelDTO buscarPorId(Long id){
 		
-		Optional<Aluguel> aluguel = aluguelRepository.findById(id);
+		Optional<Aluguel> optAluguel = this.repository.findById(id);
 		
-		if(!aluguel.isPresent()) {
-			return null;
-		}
+		if(optAluguel.isEmpty()) throw new ObjectNotFoundFromParameterException("Erro! aluguel não econtrado!");
 		
-		return aluguel.get();
+		return new AluguelDTO(optAluguel.get());
+		
 	}
 	
-	public Page<Aluguel> findByLocacao(Integer id, Integer page, Integer size){
+	public Page<AluguelDTO> buscarPorLocacao(Locacao locacao, Pageable paginacao){
 		
-		PageRequest pageable = PageRequest.of(page, size,Direction.ASC,"dataVencimento");
+		Page<Aluguel> pgAlugueis = this.repository.findByLocacao(locacao,paginacao);
 		
-		Page<Aluguel> alugueis = aluguelRepository.findByLocacao(locacaoService.findById(id),pageable);
+		return pgAlugueis.map(AluguelDTO::new);
 		
-		return alugueis;
 	}
 	
-	public Page<Aluguel> findByPeriodo(String inicio,String fim,Integer page,Integer size){
+	public Page<AluguelDTO> buscarPorPeriodo(LocalDate inicio, LocalDate fim, Pageable paginacao){
 		
-		PageRequest pageable = PageRequest.of(page, size,Direction.ASC,"dataVencimento");
+		Page<Aluguel> pgAlugueis = 
+				this.repository.findByDataVencimentoBetweenOrderByDataVencimento(inicio,fim,paginacao);
 		
-		Calendar dataInicio = Calendar.getInstance();
-		Calendar dataFim = Calendar.getInstance();
+		return pgAlugueis.map(AluguelDTO::new);
 		
-		String[] datas = inicio.split("/");
-		dataInicio.set(Integer.parseInt(datas[2]),
-			Integer.parseInt(datas[1]) - 1,
-			Integer.parseInt(datas[0]));
-		
-		datas = fim.split("/");
-		dataFim.set(Integer.parseInt(datas[2]),
-				Integer.parseInt(datas[1]) - 1,
-				Integer.parseInt(datas[0]));
-		
-		Page<Aluguel> alugueis = 
-		aluguelRepository.findByDataVencimentoBetweenOrderByDataVencimento(dataInicio.getTime(), dataFim.getTime(),pageable);
-		
-		return alugueis;
 	}
 	
-	public Page<Aluguel> findAll(Integer page,Integer size){
+	public Page<AluguelDTO> buscarTodosAtrasados(Pageable paginacao){
 		
-		PageRequest pageable = PageRequest.of(page, size,Direction.ASC,"dataVencimento");
+		LocalDate agora = LocalDate.now();
 		
-		Page<Aluguel> alugueis = aluguelRepository.findAll(pageable);
+		Page<Aluguel> pgAlugueis = 
+				this.repository.findByDataVencimentoLessThanAndQuiteOrderByDataVencimento(agora, false, paginacao);
 		
-		return alugueis;
+		return pgAlugueis.map(AluguelDTO::new);
+		
 	}
 	
-	public void delete(Aluguel aluguel) {
-		aluguelRepository.delete(aluguel);
+	public Page<AluguelDTO> buscarTodos(Pageable paginacao){
+		
+		Page<Aluguel> pgAlugueis = this.repository.findAll(paginacao);
+		
+		return pgAlugueis.map(AluguelDTO::new);
+		
 	}
-	
-	public Page<Aluguel> findAllAtrasados(Integer page,Integer size){
-		
-		PageRequest pageable = PageRequest.of(page, size,Direction.ASC, "dataVencimento");
-		
-		Date hora = new Date();
-		
-		Page<Aluguel> alugueis = 
-				this.aluguelRepository.findByDataVencimentoLessThanAndQuiteOrderByDataVencimento(hora, false, pageable);
-		
-		return alugueis;
-	}
-	
-	public List<Aluguel> findAllAtrasados(){
-		
-		Date hora = new Date();
-		
-		List<Aluguel> alugueis = this.aluguelRepository.findByDataVencimentoLessThanAndQuiteOrderByDataVencimento(hora, false);
-		
-		if(alugueis.isEmpty()) {
-			return null;
-		}
-		
-		return alugueis;
-	}
-	
 	
 }

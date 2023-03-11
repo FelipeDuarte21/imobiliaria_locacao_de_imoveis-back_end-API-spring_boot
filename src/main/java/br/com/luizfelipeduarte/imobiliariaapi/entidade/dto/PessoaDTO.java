@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Pessoa;
 
@@ -44,9 +45,9 @@ public class PessoaDTO {
 		this.salario = pessoa.getSalario();
 		this.ativo = pessoa.getAtivo();
 		this.endereco = new EnderecoDTO(pessoa.getEndereco());
-		this.contatos = pessoa.getContatos().stream().map(ContatoDTO::new).toList();
-		this.imoveis = pessoa.getImoveis().stream().map(ImovelDTO::new).toList();
-		this.locacoes = pessoa.getLocacoes().stream().map(LocacaoDTO::new).toList();
+		this.contatos = pessoa.getContatos().stream().map(ContatoDTO::new).collect(Collectors.toList());
+		this.imoveis = pessoa.getImoveis().stream().map(ImovelDTO::new).collect(Collectors.toList());
+		this.locacoes = pessoa.getLocacoes().stream().map(LocacaoDTO::new).collect(Collectors.toList());
 	}
 
 	public Long getId() {

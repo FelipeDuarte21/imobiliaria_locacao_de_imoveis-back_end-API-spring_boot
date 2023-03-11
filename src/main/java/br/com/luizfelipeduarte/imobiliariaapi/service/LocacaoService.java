@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Imovel;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Locacao;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Pessoa;
+import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.AluguelDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.LocacaoDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.LocacaoDadosDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.repositories.LocacaoRepository;
@@ -101,6 +102,26 @@ public class LocacaoService {
 		
 	}
 	
+	public Locacao buscarLocacaoPorId(Long id) {
+		
+		Optional<Locacao> optLocacao = this.repository.findById(id);
+		
+		if(optLocacao.isEmpty()) throw new ObjectNotFoundFromParameterException("Erro! locação não econtrada!");
+		
+		return optLocacao.get();
+		
+	}
+	
+	public Page<AluguelDTO> buscarAlugueis(Long id, Pageable paginacao) {
+		
+		Locacao locacao = this.buscarLocacaoPorId(id);
+		
+		Page<AluguelDTO> pgAluguel = this.aluguelService.buscarPorLocacao(locacao, paginacao);
+		
+		return pgAluguel;
+		
+	}
+	
 	public Page<LocacaoDTO> buscarPorInquilino(Long idInquilino,Pageable paginacao){
 		
 		Pessoa inquilino = this.pessoaService.buscarInquilinoPorId(idInquilino);
@@ -151,5 +172,7 @@ public class LocacaoService {
 		return locacoes.map(LocacaoDTO::new);
 		
 	}
+
+	
 	
 }

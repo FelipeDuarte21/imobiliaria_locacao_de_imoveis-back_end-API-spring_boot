@@ -39,7 +39,7 @@ public class Pessoa implements Serializable{
 	private String nome;
 	private String nacionalidade;
 	
-	@Enumerated(EnumType.STRING)
+	@Enumerated(EnumType.ORDINAL)
 	private TipoEstadoCivil estadoCivil;
 	
 	private LocalDate dataNascimento;

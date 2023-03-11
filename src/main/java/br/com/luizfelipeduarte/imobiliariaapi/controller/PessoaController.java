@@ -116,6 +116,7 @@ public class PessoaController {
 			return ResponseEntity.ok(pessoa);
 			
 		}catch(ObjectNotFoundFromParameterException ex) {
+			System.out.println("AQUI!!!!!!!!!!!!");
 			throw new ObjectNotFoundException(ex.getMessage());
 		}
 		
