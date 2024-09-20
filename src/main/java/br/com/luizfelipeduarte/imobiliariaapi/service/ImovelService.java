@@ -40,14 +40,16 @@ public class ImovelService {
 		imovel.setProprietario(proprietario);
 		imovel.setEndereco(this.enderecoService.salvar(imovelDadosDTO.getEndereco()));
 		
+		this.repository.save(imovel);
+		
 		return new ImovelDTO(imovel);
 	}
 	
 	public ImovelDTO atualizar(Long id, ImovelDadosDTO imovelDadosDTO) {
 		
-		Optional<Imovel> optImovel = this.repository.findById(imovelDadosDTO.getId());
+		Optional<Imovel> optImovel = this.repository.findById(id);
 		
-		if(optImovel.isEmpty()) throw new ObjectNotFoundException("Erro! Imóvel não encontrado!");
+		if(optImovel.isEmpty()) throw new ObjectNotFoundFromParameterException("Erro! Imóvel não encontrado!");
 		
 		Imovel imovel = optImovel.get();
 		imovel.setDescricao(imovelDadosDTO.getDescricao());

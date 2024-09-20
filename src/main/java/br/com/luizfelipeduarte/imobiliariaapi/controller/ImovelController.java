@@ -53,6 +53,7 @@ public class ImovelController {
 			
 			ImovelDTO imovel = this.service.cadastrar(imovelDadosDTO);
 			
+			
 			URI uri = uriBuilder.path("api/v1/imovel/{id}").buildAndExpand(imovel.getId()).toUri();
 			
 			return ResponseEntity.created(uri).body(imovel);

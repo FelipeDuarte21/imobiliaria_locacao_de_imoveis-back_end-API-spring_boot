@@ -45,9 +45,7 @@ public class LocacaoService {
 		locacao.getImovel().setDisponivel(false);
 		locacao.setInquilino(inquilino);
 		
-		Optional<Locacao> optLocacao =  this.repository.findByImovel(imovel);
-		
-		if(optLocacao.isPresent()) throw new IllegalParameterException("Erro! O imóvel já está alugado!");
+		if(this.repository.findByImovel(imovel).isPresent()) throw new IllegalParameterException("Erro! O imóvel já está alugado!");
 		
 		locacao = this.repository.save(locacao);
 		
