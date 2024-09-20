@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.LocacaoDadosDTO;
 import jakarta.persistence.CascadeType;
@@ -18,7 +17,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "locacao")
 public class Locacao implements Serializable{
@@ -50,10 +53,6 @@ public class Locacao implements Serializable{
 	@OneToMany(mappedBy = "locacao", cascade = CascadeType.REMOVE)
 	private List<Aluguel> alugueis = new ArrayList<>();
 	
-	public Locacao() {
-		
-	}
-	
 	public Locacao(LocacaoDadosDTO locacaoDadosDTO) {
 		this.id = locacaoDadosDTO.getId();
 		this.data = locacaoDadosDTO.getData();
@@ -62,98 +61,5 @@ public class Locacao implements Serializable{
 		this.dataTermino = locacaoDadosDTO.getDataTermino();
 		this.valor = locacaoDadosDTO.getValor();
 	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public LocalDate getData() {
-		return data;
-	}
-
-	public void setData(LocalDate data) {
-		this.data = data;
-	}
-
-	public String getTempo() {
-		return tempo;
-	}
-
-	public void setTempo(String tempo) {
-		this.tempo = tempo;
-	}
-
-	public LocalDate getDataInicio() {
-		return dataInicio;
-	}
-
-	public void setDataInicio(LocalDate dataInicio) {
-		this.dataInicio = dataInicio;
-	}
-
-	public LocalDate getDataTermino() {
-		return dataTermino;
-	}
-
-	public void setDataTermino(LocalDate dataTermino) {
-		this.dataTermino = dataTermino;
-	}
-
-	public BigDecimal getValor() {
-		return valor;
-	}
-
-	public void setValor(BigDecimal valor) {
-		this.valor = valor;
-	}
-
-	public Imovel getImovel() {
-		return imovel;
-	}
-
-	public void setImovel(Imovel imovel) {
-		this.imovel = imovel;
-	}
-
-	public Pessoa getInquilino() {
-		return inquilino;
-	}
-
-	public void setInquilino(Pessoa inquilino) {
-		this.inquilino = inquilino;
-	}
-
-	public List<Aluguel> getAlugueis() {
-		return alugueis;
-	}
-
-	public void setAlugueis(List<Aluguel> alugueis) {
-		this.alugueis = alugueis;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(data, dataInicio, dataTermino, id, tempo, valor);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Locacao other = (Locacao) obj;
-		return Objects.equals(data, other.data) && Objects.equals(dataInicio, other.dataInicio)
-				&& Objects.equals(dataTermino, other.dataTermino) && Objects.equals(id, other.id)
-				&& Objects.equals(tempo, other.tempo) && Objects.equals(valor, other.valor);
-	}
-	
-	
 
 }

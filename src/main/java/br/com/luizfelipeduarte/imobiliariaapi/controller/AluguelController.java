@@ -2,7 +2,6 @@ package br.com.luizfelipeduarte.imobiliariaapi.controller;
 
 import java.time.LocalDate;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -28,7 +27,6 @@ public class AluguelController {
 
 	private AluguelService service;
 	
-	@Autowired
 	public AluguelController(AluguelService service) {
 		this.service = service;
 	}

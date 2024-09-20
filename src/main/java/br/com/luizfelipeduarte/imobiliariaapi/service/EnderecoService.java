@@ -1,6 +1,5 @@
 package br.com.luizfelipeduarte.imobiliariaapi.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Bairro;
@@ -30,8 +29,6 @@ public class EnderecoService {
 	private NumeroRepository numeroRepository;
 	private EnderecoRepository enderecoRepository;
 	
-	
-	@Autowired
 	public EnderecoService(EstadoRepository estadoRepository, CidadeRepository cidadeRepository,
 			BairroRepository bairroRepository, ComplementoRepository complementoRepository,
 			LogradouroCepRepository logradouroCepRepository, NumeroRepository numeroRepository,

@@ -2,14 +2,11 @@ package br.com.luizfelipeduarte.imobiliariaapi.controller;
 
 import java.math.BigDecimal;
 import java.net.URI;
-import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +22,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.luizfelipeduarte.imobiliariaapi.controller.exception.ObjectBadRequestException;
 import br.com.luizfelipeduarte.imobiliariaapi.controller.exception.ObjectNotFoundException;
-import br.com.luizfelipeduarte.imobiliariaapi.entidade.Imovel;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.ImovelDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.ImovelDadosDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.service.ImovelService;
@@ -39,11 +35,9 @@ public class ImovelController {
 	
 	private ImovelService service;
 	
-	@Autowired
 	public ImovelController(ImovelService service) {
 		this.service = service;
 	}
-	
 	
 	@PostMapping
 	private ResponseEntity<ImovelDTO> cadastrar(@Valid @RequestBody ImovelDadosDTO imovelDadosDTO,

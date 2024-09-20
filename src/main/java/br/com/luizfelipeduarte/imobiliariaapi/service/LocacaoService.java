@@ -2,7 +2,6 @@ package br.com.luizfelipeduarte.imobiliariaapi.service;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,6 @@ public class LocacaoService {
 	private ImovelService imovelService;
 	private PessoaService pessoaService;
 	
-	@Autowired
 	public LocacaoService(LocacaoRepository repository, AluguelService aluguelService,
 			ImovelService imovelService, PessoaService pessoaService) {
 		this.repository = repository;

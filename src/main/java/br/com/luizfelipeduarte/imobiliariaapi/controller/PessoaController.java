@@ -2,7 +2,6 @@ package br.com.luizfelipeduarte.imobiliariaapi.controller;
 
 import java.net.URI;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -36,7 +35,6 @@ public class PessoaController {
 	
 	private PessoaService service;
 	
-	@Autowired
 	public PessoaController(PessoaService service) {
 		this.service = service;
 	}

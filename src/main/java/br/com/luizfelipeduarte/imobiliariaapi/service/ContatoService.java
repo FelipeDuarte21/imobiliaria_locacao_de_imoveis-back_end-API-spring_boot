@@ -2,7 +2,6 @@ package br.com.luizfelipeduarte.imobiliariaapi.service;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Contato;
@@ -16,7 +15,6 @@ public class ContatoService {
 	
 	private ContatoRepository repository;
 	
-	@Autowired
 	public ContatoService(ContatoRepository repository) {
 		this.repository = repository;
 	}

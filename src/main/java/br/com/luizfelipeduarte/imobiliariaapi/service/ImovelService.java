@@ -3,12 +3,10 @@ package br.com.luizfelipeduarte.imobiliariaapi.service;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import br.com.luizfelipeduarte.imobiliariaapi.controller.exception.ObjectNotFoundException;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Imovel;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.Pessoa;
 import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.ImovelDTO;
@@ -24,7 +22,6 @@ public class ImovelService {
 	private EnderecoService enderecoService;
 	private PessoaService pessoaService;
 	
-	@Autowired
 	public ImovelService(ImovelRepository repository,EnderecoService enderecoService,
 			PessoaService pessoaService) {
 		this.repository = repository;
