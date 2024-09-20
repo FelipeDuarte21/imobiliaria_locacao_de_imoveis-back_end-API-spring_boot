@@ -10,7 +10,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -40,11 +39,9 @@ public class Imovel implements Serializable{
 	private Boolean disponivel;
 	
 	@OneToOne
-	@JoinColumn(name = "id_Endereco")
 	private Endereco endereco;
 	
 	@ManyToOne
-	@JoinColumn(name = "id_Proprietario")
 	private Pessoa proprietario;
 	
 	@OneToOne(mappedBy = "imovel", cascade = CascadeType.REMOVE)

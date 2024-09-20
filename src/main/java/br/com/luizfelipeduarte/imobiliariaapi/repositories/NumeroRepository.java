@@ -8,6 +8,6 @@ import br.com.luizfelipeduarte.imobiliariaapi.entidade.Numero;
 @Repository
 public interface NumeroRepository extends JpaRepository<Numero,Long>{
 	
-	public Numero findByNumero(String numero);
+	Numero findByNumero(String numero);
 	
 }

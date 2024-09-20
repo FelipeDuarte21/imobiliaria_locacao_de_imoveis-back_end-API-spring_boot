@@ -40,6 +40,7 @@ public class Pessoa implements Serializable{
 	private TipoPessoa tipoPessoa;
 	
 	private String nome;
+
 	private String nacionalidade;
 	
 	@Enumerated(EnumType.ORDINAL)
@@ -63,7 +64,6 @@ public class Pessoa implements Serializable{
 	private Boolean ativo;
 	
 	@OneToOne
-	@JoinColumn(name = "id_Endereco")
 	private Endereco endereco;
 	
 	@OneToMany(mappedBy = "pessoa", cascade = CascadeType.REMOVE)

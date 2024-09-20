@@ -8,6 +8,6 @@ import br.com.luizfelipeduarte.imobiliariaapi.entidade.Estado;
 @Repository
 public interface EstadoRepository extends JpaRepository<Estado,Long>{
 	
-	public Estado findByNome(String nome);
+	Estado findByNome(String nome);
 	
 }

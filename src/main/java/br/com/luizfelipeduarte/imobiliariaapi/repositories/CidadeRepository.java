@@ -8,6 +8,6 @@ import br.com.luizfelipeduarte.imobiliariaapi.entidade.Cidade;
 @Repository
 public interface CidadeRepository extends JpaRepository<Cidade,Long>{
 	
-	public Cidade findByNome(String nome);
+	Cidade findByNome(String nome);
 	
 }

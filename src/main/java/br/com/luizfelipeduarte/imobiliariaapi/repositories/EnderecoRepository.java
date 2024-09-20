@@ -10,6 +10,6 @@ import br.com.luizfelipeduarte.imobiliariaapi.entidade.Numero;
 @Repository
 public interface EnderecoRepository extends JpaRepository<Endereco,Long>{
 	
-	public Endereco findByLogradouroCepAndNumero(LogradouroCep l,Numero n);
+	Endereco findByLogradouroCepAndNumero(LogradouroCep l,Numero n);
 	
 }

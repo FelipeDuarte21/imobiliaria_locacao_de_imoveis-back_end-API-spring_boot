@@ -8,6 +8,6 @@ import br.com.luizfelipeduarte.imobiliariaapi.entidade.LogradouroCep;
 @Repository
 public interface LogradouroCepRepository extends JpaRepository<LogradouroCep,Long>{
 	
-	public LogradouroCep findByCep(String cep);
+	LogradouroCep findByCep(String cep);
 	
 }

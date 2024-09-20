@@ -14,8 +14,8 @@ import br.com.luizfelipeduarte.imobiliariaapi.entidade.Locacao;
 @Repository
 public interface AluguelRepository extends JpaRepository<Aluguel,Long>{
 	
-	public Page<Aluguel> findByLocacao(Locacao locacao,Pageable pageable);
-	public Page<Aluguel> findByDataVencimentoBetweenOrderByDataVencimento(LocalDate inicio,LocalDate fim,Pageable pageable);
-	public Page<Aluguel> findByDataVencimentoLessThanAndQuiteOrderByDataVencimento(LocalDate dataVencimento, Boolean quite, Pageable pageable);
-	public List<Aluguel> findByDataVencimentoLessThanAndQuiteOrderByDataVencimento(LocalDate dataVencimento, Boolean quite);
+	Page<Aluguel> findByLocacao(Locacao locacao,Pageable pageable);
+	Page<Aluguel> findByDataVencimentoBetweenOrderByDataVencimento(LocalDate inicio,LocalDate fim,Pageable pageable);
+	Page<Aluguel> findByDataVencimentoLessThanAndQuiteOrderByDataVencimento(LocalDate dataVencimento, Boolean quite, Pageable pageable);
+	List<Aluguel> findByDataVencimentoLessThanAndQuiteOrderByDataVencimento(LocalDate dataVencimento, Boolean quite);
 }

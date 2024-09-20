@@ -15,15 +15,15 @@ import br.com.luizfelipeduarte.imobiliariaapi.entidade.Pessoa;
 @Repository
 public interface ImovelRepository extends JpaRepository<Imovel,Long>{
 	
-	public Page<Imovel> findByDisponivelAndProprietario(Boolean disponivel,Pessoa proprietario,Pageable pageable);
+	Page<Imovel> findByDisponivelAndProprietario(Boolean disponivel,Pessoa proprietario,Pageable pageable);
 	
-	public Page<Imovel> findByDisponivel(Boolean disponivel,Pageable pageable);
+	Page<Imovel> findByDisponivel(Boolean disponivel,Pageable pageable);
 	
-	public Page<Imovel> findByProprietario(Pessoa proprietario, Pageable pageable);
+	Page<Imovel> findByProprietario(Pessoa proprietario, Pageable pageable);
 	
-	public Page<Imovel> findByPrecoLessThanEqualAndDisponivel(BigDecimal preco,Boolean valor,Pageable pageable);
+	Page<Imovel> findByPrecoLessThanEqualAndDisponivel(BigDecimal preco,Boolean valor,Pageable pageable);
 	
-	public Imovel findByEndereco(Endereco endereco);
+	Imovel findByEndereco(Endereco endereco);
 	
 	@Query(value = "SELECT * FROM imovel i JOIN pessoa p ON i.id_proprietario = p.id "
 			+ "WHERE p.nome LIKE %?1% ",nativeQuery = true)

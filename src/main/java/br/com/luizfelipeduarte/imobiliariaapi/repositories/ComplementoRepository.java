@@ -8,6 +8,6 @@ import br.com.luizfelipeduarte.imobiliariaapi.entidade.Complemento;
 @Repository
 public interface ComplementoRepository extends JpaRepository<Complemento,Long>{
 
-	public Complemento findByComplemento(String complemento);	
+	Complemento findByComplemento(String complemento);	
 	
 }
