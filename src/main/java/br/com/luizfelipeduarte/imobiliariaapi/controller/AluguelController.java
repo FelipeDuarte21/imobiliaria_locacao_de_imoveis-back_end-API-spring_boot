@@ -20,7 +20,7 @@ import br.com.luizfelipeduarte.imobiliariaapi.entidade.dto.AluguelDTO;
 import br.com.luizfelipeduarte.imobiliariaapi.service.AluguelService;
 import br.com.luizfelipeduarte.imobiliariaapi.service.exception.ObjectNotFoundFromParameterException;
 
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/aluguel")
 public class AluguelController {

@@ -28,7 +28,7 @@ import br.com.luizfelipeduarte.imobiliariaapi.service.exception.IllegalParameter
 import br.com.luizfelipeduarte.imobiliariaapi.service.exception.ObjectNotFoundFromParameterException;
 import jakarta.validation.Valid;
 
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/pessoa")
 public class PessoaController {
@@ -151,7 +151,7 @@ public class PessoaController {
 	}
 	
 	@GetMapping("/inquilino")
-	private ResponseEntity<Page<PessoaDTO>> findByNomeInquilino(@RequestParam(defaultValue = "") String nome,
+	private ResponseEntity<Page<PessoaDTO>> findByNomeInquilino(@RequestParam(name = "nome") String nome,
 			@PageableDefault (page = 0, size = 6, direction = Direction.ASC, sort = "nome") Pageable paginacao){
 		
 		Page<PessoaDTO> pqInquilinos = this.service.buscarInquilinoPorNome(nome, paginacao);

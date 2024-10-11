@@ -29,7 +29,7 @@ import br.com.luizfelipeduarte.imobiliariaapi.service.exception.IllegalParameter
 import br.com.luizfelipeduarte.imobiliariaapi.service.exception.ObjectNotFoundFromParameterException;
 import jakarta.validation.Valid;
 
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/locacao")
 public class LocacaoController {
